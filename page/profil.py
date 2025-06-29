@@ -5,7 +5,7 @@ from kivy.uix.boxlayout import BoxLayout
 from components.navigation import ButtonNavigation
 
 
-class SettingsScreen(Screen):
+class ProfilScreen(Screen):
     def __init__(self, screen_manager, **kwargs):
         self.screen_manager = screen_manager
         super().__init__(**kwargs)

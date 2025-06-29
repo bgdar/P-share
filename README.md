@@ -50,8 +50,25 @@ Aktifkan virtual env di linux
 source shareXPython/bin/activate
 ``` 
 
+### package
+1. kivy = package utama untuk membagun programnya
+2. plyer = untuk menangani file upload di __android dan ios__
+    konfigurasi player
+    Jika kamu akan build ke Android, pastikan tambahkan plyer ke buildozer.spec:
+
+    # buildozer.spec
+    ```bash
+    requirements = python3,kivy,plyer
+    Dan jika kamu pakai fitur seperti filechooser dari plyer, tambahkan juga android.permissions:
+    ```
+    ```bash
+    android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+    ```
 
 ### folder
+
+`assets\file` : folder dari hasil file yg di upload user ( nantik gunakan di profile dan yg akan di kirim oleh **client**) 
+
 
 - `tets` : uji coba 
 

@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import ScreenManager
 # page module
 from page.dashboard import DashboardScreen
 from page.sender import SerderScreen
-from page.setting import SettingsScreen
+from page.profil import ProfilScreen
 
 iconsPath = os.path.join(os.path.dirname(
     __file__), "assets", "img", "shareMas.png")
@@ -15,7 +15,7 @@ iconsPath = os.path.join(os.path.dirname(
 daftarScreen = {
     "dashboard": DashboardScreen,  # akan muncul sebagai tampilan utama
     "serder": SerderScreen,
-    "setting": SettingsScreen,
+    "profil": ProfilScreen,
 }
 
 
