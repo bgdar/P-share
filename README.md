@@ -3,13 +3,13 @@
 Apliaksi bekerja dengan coneksi TCP saat client membuka App maka akan menyimpan ip saat ini dari client
 untuk terhubung maka client perlu menambah ip server maka file tarsfer bisa di lakukan
 
+```
+┌─────────────┐         WiFi LAN         ┌──────────────┐
+│   Client    │  ─────────────────────▶  │    Server    │
+│ (Pengirim)  │                          │  (Penerima)  │
+└─────────────┘                          └──────────────┘
+```
 
-<prv>
-    ┌─────────────┐         WiFi LAN         ┌──────────────┐
-    │   Client    │  ─────────────────────▶  │    Server    │
-    │ (Pengirim)  │                          │  (Penerima)  │
-    └─────────────┘                          └──────────────┘
- </prv>
 - server menunggu file masuk dan client akan mengirimkan file
 -  salah satu aplikasi harus berperan sebagai server, dan yang lain sebagai client.
 
@@ -67,7 +67,7 @@ source shareXPython/bin/activate
 
 ### folder
 
-`assets\file` : folder dari hasil file yg di upload user ( nantik gunakan di profile dan yg akan di kirim oleh **client**) 
+- `assets\file` : folder dari hasil file yg di upload user ( nantik gunakan di profile dan yg akan di kirim oleh **client**) 
 
 
 - `tets` : uji coba 
@@ -75,4 +75,5 @@ source shareXPython/bin/activate
 - `Network` : folder konfigurasi backend untuk sinyal proses pengiriman file 
     1. client.py = adalah tiap tiap client yang terhubung 
 
-
+- `receiver` = folder akan berisi file yang akan di terima dari client 
+    untuk sekarang hanya bisa menerima file 2 enter aja

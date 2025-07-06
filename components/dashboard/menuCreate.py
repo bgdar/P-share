@@ -13,7 +13,7 @@ from plyer import filechooser
 from components.popup import CustomPopup
 from components.infoPopup import InfoPopup
 
-from Network.server import Server, get_ip_address
+from network import get_ip_address
 import shutil
 
 current_dir = os.path.dirname(__file__)
@@ -26,7 +26,7 @@ def file_selected_PC(instance, selection, touch=None):
         for file in selection:
             try:
                 shutil.copy(file, folder_file)
-                notif = InfoPopup(f'file {file} di salin', 'info', 3)
+                notif = InfoPopup(f'file {file} di salin', 'succes', 3)
                 notif.Show_popup()
 
             except Exception as e:
@@ -64,9 +64,9 @@ def create_upload_file():
         filechooser.open_file(on_selection=file_selected_Mobile)
         content.add_widget(Label(text="choose file upload"))
     else:
-        # managemnets file upload
+        # managemnets file upload | semua file boleh di upload
         file_pc_choose = FileChooserListView(
-            filters=["*.png", "*.jpg", "*.py", "*.cpp", "*.*"], multiselect=False)
+            filters=["*.*"], multiselect=False)
 
         # pembungkus file path start
         divFilePath = BoxLayout(orientation="horizontal",

@@ -14,7 +14,7 @@ class InfoPopup:
     yang terletak di pojok kanan atas
 
     @title : Judul popup
-    @type : *succe*,*info* , **warning** , **error**
+    @type : succes,info, warning , error
     @time : berapa lama popup bertahan sebelum di close (2=2detik)
 
     '''

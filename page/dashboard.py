@@ -8,9 +8,6 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 
-# Network
-from Network.server import Server, get_ip_address
-
 # COMPONENTS
 from components.navigation import ButtonNavigation
 from components.popup import CustomPopup

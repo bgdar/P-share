@@ -43,11 +43,14 @@ class CustomPopup:
         button_close = Button(text="close", size_hint_y=None, height=40)
         popup_container.add_widget(button_close)
 
+        # lakukan akuras berdasarkan windows ukuranya
+        lebarPopup, tinggiPopup = self.size_popup
+
         self.popup = Popup(
             title=self.title,
             content=popup_container,
             size_hint=(None, None),
-            size=self.size_popup,
+            size=(lebarPopup, tinggiPopup),
             auto_dismiss=False
         )
         self.popup.pos = self.posisi_popup

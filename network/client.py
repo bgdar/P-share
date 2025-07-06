@@ -6,11 +6,12 @@ import os
 # client = Client("192.168.1.42", port=5000)
 # client.send_file("/home/user/Documents/fileku.txt")
 
+
 class Client:
     def __init__(self, ip_tujuan: str, port: int = 5000):
         '''ip_tujuan = ip server dapatkan misalnya dari menu ip'''
-        self.ip = ip_tujuan
-        self.port = port
+        self.__ip = ip_tujuan
+        self.__port = port
 
     def send_file(self, filepath: str):
         if not os.path.exists(filepath):
@@ -21,20 +22,27 @@ class Client:
         filesize = os.path.getsize(filepath)
 
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((self.ip, self.port))
+            connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            connection.connect((self.ip, self.port))
             print(f"[📤] Mengirim file ke {self.ip}:{self.port} ...")
 
             # Kirim metadata
-            s.send(f"{filename}::{filesize}\n".encode())
+            connection.send(f"{filename}::{filesize}\n".encode())
+
+            # tunggu ack dari server
+            ack = connection.recv(1024).decode()
+            if ack != 'OK':  # kirim byte OK
+                print("[!] Gagal menerima ACK dari server.")
+                return
 
             # Kirim isi file
+            # 'rb' : baca binery nya
             with open(filepath, "rb") as f:
                 while chunk := f.read(4096):
-                    s.send(chunk)
+                    connection.send(chunk)
 
             print(f"[✓] File '{filename}' berhasil dikirim.")
         except Exception as e:
             print(f"[!] Gagal mengirim file: {e}")
         finally:
-            s.close()
+            connection.close()
