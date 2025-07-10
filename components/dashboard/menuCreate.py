@@ -7,14 +7,17 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 
 from kivy.utils import platform
+from kivy.graphics import Color, Rectangle
 
 from plyer import filechooser
 
 from components.popup import CustomPopup
 from components.infoPopup import InfoPopup
 
-from network import get_ip_address
+from network import get_ip_address, ping_server
+
 import shutil
+
 
 current_dir = os.path.dirname(__file__)
 folder_file = os.path.join(current_dir, "../../assets/file/")
@@ -95,11 +98,48 @@ def create_check_ip_content():
     content = BoxLayout(orientation='horizontal')
     content.add_widget(Label(text=get_ip_address()))
     return content
+# IP CHEK
 
 
-def create_menu3_content():
-    content = BoxLayout(orientation='horizontal')
-    content.add_widget(Label(text="Menu 3 content"))
+def on_btn_check(instance, ping_server: callable, textIp: TextInput, result: Label):
+    text_ip = textIp.text  # ambil text dari TextInput
+    is_active = ping_server(text_ip)
+    # Ubah teks label
+    result.text = 'Aktif' if is_active else 'Tidak Aktif'
+    result.canvas.before.clear()
+
+    # Tambahkan warna latar belakang
+    with result.canvas.before:
+        if is_active:
+            Color(0, 1, 0, 0.3)  # Hijau dengan transparansi
+        else:
+            Color(1, 0, 0, 0.3)  # Merah dengan transparansi
+        # Rectangle untuk background
+        Rectangle(pos=result.pos, size=result.size)
+
+        # Sinkronkan posisi & ukuran rectangle
+        def update_rect(instance, value):
+            result.canvas.before.clear()
+            with result.canvas.before:
+                if is_active:
+                    Color(0, 1, 0, 0.3)  # hijau
+                else:
+                    Color(1, 0, 0, 0.3)  # merah
+                Rectangle(pos=result.pos, size=result.size)
+        result.bind(pos=update_rect, size=update_rect)
+
+
+def create_ip_check():
+    content = BoxLayout(orientation='vertical')
+    textIp = TextInput(hint_text="ip server", multiline=False)
+    btnIp = Button(text='check')
+    result = Label(text='')
+
+    btnIp.bind(on_press=lambda x: on_btn_check(x, ping_server, textIp, result))
+
+    content.add_widget(textIp)
+    content.add_widget(btnIp)
+    content.add_widget(result)
     return content
 
 
@@ -118,9 +158,9 @@ cekIpPopup = CustomPopup(posisi_popup=(
     100, 100), title="Your IP", size_popup=(200, 300))
 cekIpPopup.set_content(create_check_ip_content)
 
-menu3Popup = CustomPopup(posisi_popup=(
+menuChekIp = CustomPopup(posisi_popup=(
     100, 100), title="Menu 3", size_popup=(200, 300))
-menu3Popup.set_content(create_menu3_content)
+menuChekIp.set_content(create_ip_check)
 
 menu4Popup = CustomPopup(posisi_popup=(
     100, 100), title="Menu 4", size_popup=(200, 300))
@@ -131,13 +171,12 @@ menu4Popup.set_content(create_menu4_content)
 infoUploadFile = InfoPopup(
     title="Click 2 kali untuk save file", type='info', timer=3)
 
-infoIp = InfoPopup(title="ip computer kamu", type='info', timer=2)
-
 # menu yang akan di gunakan di Dashboard
 Menu = [
     # gunakan untuk mendapakan ip yg bisa di gunakan
-    {"menu": "upload", "to": "", "popup": menuUploadFile, "popupInfo": infoUploadFile},
-    {"menu": "cek ip", "to": "", "popup": cekIpPopup, "popupInfo": infoIp},
-    {"menu": "menu3", "to": "", "popup": menu3Popup, "popupInfo": ""},
-    {"menu": "menu4", "to": "", "popup": menu4Popup, "popupInfo": ""},
+    {"menu": "upload", "popup": menuUploadFile, "popupInfo": infoUploadFile},
+    {"menu": "cek ip ", "popup": cekIpPopup, "popupInfo": ""},
+    {"menu": "ping", "popup": menuChekIp, "popupInfo": ""},
+    {"menu": "menu4", "popup": menu4Popup, "popupInfo": ""},
+
 ]

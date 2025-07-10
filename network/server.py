@@ -2,6 +2,10 @@
 import socket
 import threading
 import os
+import subprocess
+import platform
+from pathlib import Path
+from typing import TypedDict, List
 
 # example
 # ip = get_ip_address()
@@ -73,6 +77,48 @@ class Server:
             print(f"[!] Error dari {addr}: {e}")
         finally:
             conn.close()
+
+
+def ping_server(ip: str) -> bool:
+    '''Ping IP secara cross-platform'''
+    if not ip:
+        return False
+
+    param = "-n" if platform.system().lower() == "windows" else "-c"
+    command = ["ping", param, "1", ip]
+
+    try:
+        subprocess.check_output(command, stderr=subprocess.STDOUT)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+class typeFile(TypedDict):
+    pathFile: str
+    nameFile: str
+# sedikit berantakan nanntik perbaiki lagi
+
+
+def get_all_files() -> List[typeFile]:
+    '''kembalikan dictionary nama file dan path filenya'''
+    pathfile = os.path.join(os.path.dirname(__file__), "../assets/file/")
+    folder = Path(pathfile)
+    if not folder.exists():
+        print(f"Folder tidak ditemukan: {folder}")
+        return []
+    result: List[typeFile] = []
+
+    for file in folder.iterdir():
+        if file.is_file():
+            print("path", file, "name", file.name)
+            result.append(
+                {
+                    'pathFile': str(file),
+                    'nameFile': file.name,
+                }
+            )
+    return result
 
 
 def get_ip_address():

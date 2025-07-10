@@ -20,11 +20,13 @@ class ProfilScreen(Screen):
         # menu item yg di tengah sampai bawah
         mainLayout.add_widget(MenuItem())
 
+        # button navigasi di paling bawah
         if self.screen_manager:
             mainLayout.add_widget(ButtonNavigation(
                 screen_manager=self.screen_manager))
 
         self.add_widget(mainLayout)
+        
 
     def profilCard(self):
         '''card yg paling atas'''
@@ -71,7 +73,7 @@ class MenuItem(BoxLayout):
 
     def item(self, item: str):
         '''setiap item punya containernya sendiri'''
-        divItem = BoxLayout(orientation='horizontal', padding=10)
+        divItem = BoxLayout(orientation='horizontal', padding=5)
         with divItem.canvas.before:
             Color(82/255, 178/255, 245/255, 1)
             bgItem = Rectangle()

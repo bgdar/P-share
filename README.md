@@ -56,7 +56,7 @@ source shareXPython/bin/activate
     konfigurasi player
     Jika kamu akan build ke Android, pastikan tambahkan plyer ke buildozer.spec:
 
-    # buildozer.spec
+    - buildozer.spec
     ```bash
     requirements = python3,kivy,plyer
     Dan jika kamu pakai fitur seperti filechooser dari plyer, tambahkan juga android.permissions:

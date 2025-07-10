@@ -88,8 +88,8 @@ class centerItems(GridLayout):
             self.add_widget(self.cardItems(
                 items["menu"], items["popup"], items['popupInfo']))
 
+        # manipulasi perubhan layout Windows nya
         self.update_layout(Window.size)
-
         Window.bind(size=self.on_window_resize)
 
     def cardItems(self, menu: str, popup: CustomPopup, popupInfo: ''):
