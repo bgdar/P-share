@@ -4,8 +4,6 @@ import threading
 import os
 import subprocess
 import platform
-from pathlib import Path
-from typing import TypedDict, List
 
 # example
 # ip = get_ip_address()
@@ -22,12 +20,17 @@ class Server:
             socket.AF_INET, socket.SOCK_STREAM)
         os.makedirs(self.__save_folder, exist_ok=True)
 
+        self.clientError = ""  # akan menampung info jika erro
+
     def start(self):
         '''mulai koneksi'''
         self.__server_socket.bind((self.__host, self.__port))
         self.__server_socket.listen()
         print(f"[🟢] Server menunggu koneksi di {self.__host}:{self.__port}")
         threading.Thread(target=self.__accept_connections, daemon=True).start()
+
+    def stop(self):
+        self.__server_socket.close()
 
     def __accept_connections(self):
         while True:
@@ -46,7 +49,7 @@ class Server:
                 chunk = conn.recv(1)
                 if not chunk:
                     break
-                metadata_bytes += chunk
+            metadata_bytes += chunk
 
             metadata = metadata_bytes.decode().strip()
             print("metadata yg di dapat:", metadata)
@@ -75,6 +78,7 @@ class Server:
 
         except Exception as e:
             print(f"[!] Error dari {addr}: {e}")
+            self.clientError = 'client tidak terhubung'
         finally:
             conn.close()
 
@@ -92,33 +96,6 @@ def ping_server(ip: str) -> bool:
         return True
     except subprocess.CalledProcessError:
         return False
-
-
-class typeFile(TypedDict):
-    pathFile: str
-    nameFile: str
-# sedikit berantakan nanntik perbaiki lagi
-
-
-def get_all_files() -> List[typeFile]:
-    '''kembalikan dictionary nama file dan path filenya'''
-    pathfile = os.path.join(os.path.dirname(__file__), "../assets/file/")
-    folder = Path(pathfile)
-    if not folder.exists():
-        print(f"Folder tidak ditemukan: {folder}")
-        return []
-    result: List[typeFile] = []
-
-    for file in folder.iterdir():
-        if file.is_file():
-            print("path", file, "name", file.name)
-            result.append(
-                {
-                    'pathFile': str(file),
-                    'nameFile': file.name,
-                }
-            )
-    return result
 
 
 def get_ip_address():

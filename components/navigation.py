@@ -6,7 +6,7 @@ from kivy.uix.button import Button
 
 daftarButton = [
     {"name_screen": "Dashboard", "to": "dashboard"},
-    {"name_screen": "Sender", "to": "serder"},
+    {"name_screen": "Share", "to": "share"},
     {"name_screen": "Profil", "to": "profil"}
 ]
 

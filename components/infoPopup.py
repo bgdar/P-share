@@ -15,7 +15,7 @@ class InfoPopup:
 
     @title : Judul popup
     @type : succes,info, warning , error
-    @time : berapa lama popup bertahan sebelum di close (2=2detik)
+    @time : berapa lama popup bertahan sebelum di close (misalnya 2=2detik)
 
     '''
 
@@ -55,10 +55,11 @@ class InfoPopup:
         # pojok kanan atas
         self.popup.size_hint = (None, None)
         self.popup.size = (350, 120)
-        self.popup.auto_dismiss = True
-        # self.popup.pos = (Window.width + self.popup.width,
-        #                   Window.height + self.popup.height)
+        self.popup.auto_dismiss = False
+        self.popup.pos = (Window.width + self.popup.width,
+                          Window.height + self.popup.height)
         self.popup.separator_height = 0
+        # self.popup.background = ''
         self.popup.padding = 10
         # self.popup.background=""
 

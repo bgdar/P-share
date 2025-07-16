@@ -5,8 +5,8 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
 # page module
-from page.dashboard import DashboardScreen
-from page.sender import SerderScreen
+from page.dashboard.dashboard import DashboardScreen
+from page.share.share import ShareScreen
 from page.profil import ProfilScreen
 
 iconsPath = os.path.join(os.path.dirname(
@@ -14,14 +14,14 @@ iconsPath = os.path.join(os.path.dirname(
 
 daftarScreen = {
     "dashboard": DashboardScreen,  # akan muncul sebagai tampilan utama
-    "serder": SerderScreen,
+    "share": ShareScreen,
     "profil": ProfilScreen,
 }
 
 
 class mainApp(App):
     def build(self):
-        self.title = "share X python"
+        self.title = "P share"
         self.icon = iconsPath
 
         screenManager = ScreenManager()

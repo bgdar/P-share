@@ -14,7 +14,6 @@ class ProfilScreen(Screen):
         self.screen_manager = screen_manager
         super().__init__(**kwargs)
         mainLayout = BoxLayout(orientation="vertical")
-
         # menu foto profil yg di atas
         mainLayout.add_widget(self.profilCard())
         # menu item yg di tengah sampai bawah
@@ -26,7 +25,6 @@ class ProfilScreen(Screen):
                 screen_manager=self.screen_manager))
 
         self.add_widget(mainLayout)
-        
 
     def profilCard(self):
         '''card yg paling atas'''

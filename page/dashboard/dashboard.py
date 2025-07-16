@@ -13,8 +13,9 @@ from components.navigation import ButtonNavigation
 from components.popup import CustomPopup
 from components.infoPopup import InfoPopup
 
+
 # Components Dashboard
-from components.dashboard.menuCreate import Menu
+from .menuCreate import Menu
 
 
 class DashboardScreen(Screen):

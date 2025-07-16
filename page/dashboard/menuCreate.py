@@ -13,6 +13,7 @@ from plyer import filechooser
 
 from components.popup import CustomPopup
 from components.infoPopup import InfoPopup
+from components.Globalstate import Store
 
 from network import get_ip_address, ping_server
 
@@ -25,12 +26,18 @@ os.makedirs(folder_file, exist_ok=True)  # buat dulu jika belum ada
 
 
 def file_selected_PC(instance, selection, touch=None):
+
     if selection:
         for file in selection:
             try:
+                print("is run file selectetd")
                 shutil.copy(file, folder_file)
+                # natifikasi jika berhasil
                 notif = InfoPopup(f'file {file} di salin', 'succes', 3)
                 notif.Show_popup()
+
+                # update isReloud
+                Store.toogle_realoadFile(True)
 
             except Exception as e:
                 print("Gagal menyalin:", file)
