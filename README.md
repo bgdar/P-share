@@ -3,6 +3,15 @@
 Apliaksi bekerja dengan coneksi TCP saat client membuka App maka akan menyimpan ip saat ini dari client
 untuk terhubung maka client perlu menambah ip server maka file tarsfer bisa di lakukan
 
+
+## 🔧 Tech Stack
+
+[![My Skills](https://skillicons.dev/icons?i=python,git,vscode,linux&perline=4)](https://skillicons.dev)
+![Kivy](https://img.shields.io/badge/Kivy-2.3.0-green?logo=appveyor)
+
+
+### **daftar page,fitur  untuk aplikasi *Berbagi File Lokal* | Python + kivy (tanpa internet, via  socket TCP):
+
 ```
 ┌─────────────┐         WiFi LAN         ┌──────────────┐
 │   Client    │  ─────────────────────▶  │    Server    │
@@ -13,35 +22,32 @@ untuk terhubung maka client perlu menambah ip server maka file tarsfer bisa di l
 - server menunggu file masuk dan client akan mengirimkan file
 -  salah satu aplikasi harus berperan sebagai server, dan yang lain sebagai client.
 
-### **daftar halaman dan fitur** secara singkat untuk aplikasi *Berbagi File Lokal*  dengan Python + kivy (tanpa internet, via  socket TCP):
-
  1. **Halaman Utama (Dashboard)**
-
-* Pilihan: **Kirim File** atau **Terima File**
+* management file 
 * Status koneksi: “Tersambung ke jaringan lokal” / “Tidak tersambung”
 
- 2. **Mode Pengirim (Sender)**
-
+ 2. **Share (Sender | Receiver)**
+__Serder__ atau Client
 * Tombol **Pilih File / Folder**
 * Daftar file yang akan dikirim
 * Input alamat IP perangkat penerima
 * Tombol **Kirim**
 * Progress bar pengiriman
 * Notifikasi sukses/gagal
-
- 3. **Mode Penerima (Receiver)**
-
+__Receiver__ atau Server
 * Tombol **Mulai Menerima**
 * Menampilkan alamat IP lokal (untuk diketik oleh pengirim)
 * Daftar file yang diterima
 * Opsi folder tujuan penyimpanan
 * Progress bar penerimaan
 
- 4. **Pengaturan (Opsional)**
-
+3. Profil 
 * Ganti port komunikasi (default: 9090)
 * Folder default penyimpanan
-* Mode otomatis buka file setelah diterima
+
+### project screenshot
+![sampel project](./assets/img/sampel.png)
+
 
 ### konfigurasi 
 
@@ -66,9 +72,7 @@ source shareXPython/bin/activate
     ```
 
 ### folder
-
 - `assets\file` : folder dari hasil file yg di upload user ( nantik gunakan di profile dan yg akan di kirim oleh **client**) 
-
 
 - `tets` : uji coba 
 

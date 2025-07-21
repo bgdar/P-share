@@ -9,6 +9,8 @@ def get_resource_path(*relative_path_parts):
     Membangun path absolut ke resource seperti gambar, ikon, font, dll.
     Bisa dipanggil dari file Python manapun di dalam project.
 
+    Example : icon_path = get_resource_path("assets", "icon", "send.png")
+              print("Icon Path:", icon_path)
     Args:
         *relative_path_parts: Bagian path relatif dari folder `assets`.
             Contoh: 'assets', 'font', 'DejaVuSans.ttf'
@@ -34,12 +36,6 @@ def get_resource_path(*relative_path_parts):
 
     # Setelah ditemukan root project, gabungkan dengan relative path
     return os.path.join(current, *relative_path_parts)
-
-
-# contoh penggunaan
-icon_path = get_resource_path("assets", "icon", "send.png")
-print("Icon Path:", icon_path)
-print("Exists?", os.path.exists(icon_path))
 
 
 class typeFile(TypedDict):

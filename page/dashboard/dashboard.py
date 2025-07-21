@@ -125,9 +125,11 @@ class centerItems(GridLayout):
             popupInfo.Show_popup()
 
     def on_window_resize(self, instance, size):
+        ''''fungsi yang menerima perubahan untuk di gunakan '''
         self.update_layout(size)
 
     def update_layout(self, size):
+        '''gunakan nantik untuk update layout jika ada perubahan  window'''
         width, height = size
         # untuk sekarang layout di pastikan manual
         self.cols = 2 if width >= 600 or height >= 800 else 1

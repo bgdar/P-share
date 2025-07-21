@@ -9,7 +9,10 @@ import os
 
 class Client:
     def __init__(self, ip_tujuan: str, port: int = 5000):
-        '''ip_tujuan = ip server dapatkan misalnya dari menu ip'''
+        '''ip_tujuan = ip server dapatkan misalnya dari menu ip
+           port       = port server tujuan 
+        '''
+        self.shareSucess = None
         self.__ip = ip_tujuan
         self.__port = port
 
@@ -42,6 +45,7 @@ class Client:
                     connection.send(chunk)
 
             print(f"[✓] File '{filename}' berhasil dikirim.")
+            self.shareSucess = True
         except Exception as e:
             print(f"[!] Gagal mengirim file: {e}")
         finally:

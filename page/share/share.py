@@ -45,9 +45,9 @@ class ShareScreen(Screen):
         btnNav = BoxLayout(size_hint_y=0.1)
 
         fontbtn = get_resource_path('assets', 'font', 'DejaVuSerif.ttf')
-        btn_prev = Button(text="❮", font_size=24,
+        btn_prev = Button(text="<", font_size=24,
                           font_name=fontbtn)
-        btn_next = Button(text="❯", font_size=24,
+        btn_next = Button(text=">", font_size=24,
                           font_name=fontbtn)
 
         btnNav.add_widget(btn_prev)

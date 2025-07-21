@@ -1,5 +1,6 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.graphics import Color, Ellipse
 
@@ -18,7 +19,7 @@ class ServerSection(BoxLayout):
         self.orientation = 'vertical'
         self.padding = 10
 
-        self.server_thread = None
+        self.server_thread = None  # simpan thread
 
         # untuk sekarang port di atur static dulu
         self.server = Server(get_ip_address(), port=5000)
@@ -27,6 +28,7 @@ class ServerSection(BoxLayout):
         divCenterBtn.add_widget(self.__btn_send_file(icon='send.png'))
 
         self.add_widget(divCenterBtn)
+        self.add_widget(Label(text="server"))
 
     def __btn_send_file(self, icon=str) -> Button:
         '''

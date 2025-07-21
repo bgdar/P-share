@@ -1,13 +1,12 @@
 import os
 
 from kivy.app import App
-from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 
 # page module
 from page.dashboard.dashboard import DashboardScreen
 from page.share.share import ShareScreen
-from page.profil import ProfilScreen
+from page.profil.profil import ProfilScreen
 
 iconsPath = os.path.join(os.path.dirname(
     __file__), "assets", "img", "shareMas.png")
@@ -29,7 +28,7 @@ class mainApp(App):
         for name, screen_class in daftarScreen.items():
             # name adalah nama screen yg aktif ,
             #!perhatian screen_manager akan di kirim ke setiap componets
-            # jadi erhatikan agar tidak masuk ke parameter **kywargs
+            # jadi perhaikan agar tidak masuk ke parameter **kywargs
             screenManager.add_widget(
                 screen_class(name=name, screen_manager=screenManager))
         return screenManager
