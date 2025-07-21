@@ -1,14 +1,24 @@
-# P share
+<h1 align="center"> P Share</h1>
 
-Apliaksi bekerja dengan coneksi TCP saat client membuka App maka akan menyimpan ip saat ini dari client
-untuk terhubung maka client perlu menambah ip server maka file tarsfer bisa di lakukan
+<p align="center">
+  Aplikasi berbagi file lokal yang berjalan melalui koneksi <b>TCP</b>. <br />
+  Saat client membuka aplikasi, IP akan otomatis disimpan, <br />
+  dan proses transfer dapat dimulai setelah client menambahkan alamat IP server.
+</p>
 
+---
 
 ## 🔧 Tech Stack
 
-[![My Skills](https://skillicons.dev/icons?i=python,git,vscode,linux&perline=4)](https://skillicons.dev)
-![Kivy](https://img.shields.io/badge/Kivy-2.3.0-green?logo=appveyor)
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=python,git,vim,linux&perline=4" />
+  </a> <br />
+  <img src="https://img.shields.io/badge/Kivy-2.3.0-green?logo=appveyor" />
+  <img src="https://img.shields.io/badge/Editor-Neovim-brightgreen?logo=neovim&logoColor=white" />
+</p>
 
+---
 
 ### **daftar page,fitur  untuk aplikasi *Berbagi File Lokal* | Python + kivy (tanpa internet, via  socket TCP):
 
@@ -45,8 +55,10 @@ __Receiver__ atau Server
 * Ganti port komunikasi (default: 9090)
 * Folder default penyimpanan
 
-### project screenshot
-![sampel project](./assets/img/sampel.png)
+## project Screenshot
+<p align="center">
+  <img src="./assets/img/sampel.png" alt="sampel project" width="70%" />
+</p>
 
 
 ### konfigurasi 
@@ -56,28 +68,24 @@ Aktifkan virtual env di linux
 source shareXPython/bin/activate
 ``` 
 
-### package
-1. kivy = package utama untuk membagun programnya
-2. plyer = untuk menangani file upload di __android dan ios__
-    konfigurasi player
-    Jika kamu akan build ke Android, pastikan tambahkan plyer ke buildozer.spec:
+### Dependencies
+Kivy: Library utama untuk GUI
 
-    - buildozer.spec
-    ```bash
-    requirements = python3,kivy,plyer
-    Dan jika kamu pakai fitur seperti filechooser dari plyer, tambahkan juga android.permissions:
-    ```
-    ```bash
-    android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
-    ```
+Plyer: Untuk akses file Android/iOS
 
-### folder
-- `assets\file` : folder dari hasil file yg di upload user ( nantik gunakan di profile dan yg akan di kirim oleh **client**) 
+Konfigurasi Plyer (untuk Android)
+Tambahkan ke buildozer.spec:
+```bash
+requirements = python3,kivy,plyer
+android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+```
 
-- `tets` : uji coba 
+---
+| Struktur Folder     | Deskripsi                                                          |
+| ------------------- | ------------------------------------------------------------------ |
+| `assets/file`       | Folder hasil upload pengguna (digunakan client & diatur di profil) |
+| `tets/`             | Folder uji coba                                                    |
+| `Network/`          | Backend & logika koneksi TCP                                       |
+| `Network/client.py` | Modul client socket                                                |
+| `receiver/`         | Folder penyimpanan file hasil transfer dari client                 |
 
-- `Network` : folder konfigurasi backend untuk sinyal proses pengiriman file 
-    1. client.py = adalah tiap tiap client yang terhubung 
-
-- `receiver` = folder akan berisi file yang akan di terima dari client 
-    untuk sekarang hanya bisa menerima file 2 enter aja
