@@ -1,4 +1,4 @@
-# shareXPython
+# P share
 
 Apliaksi bekerja dengan coneksi TCP saat client membuka App maka akan menyimpan ip saat ini dari client
 untuk terhubung maka client perlu menambah ip server maka file tarsfer bisa di lakukan
