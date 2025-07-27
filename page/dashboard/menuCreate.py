@@ -1,3 +1,5 @@
+# daftar daftar menu yang di gunakan di bagian tengah
+
 import os
 
 from kivy.uix.filechooser import FileChooserListView

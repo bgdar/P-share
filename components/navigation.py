@@ -3,11 +3,12 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.graphics import Color, RoundedRectangle
 from kivy.uix.button import Button
 
-
+from database.session import session
 daftarButton = [
     {"name_screen": "Dashboard", "to": "dashboard"},
     {"name_screen": "Share", "to": "share"},
-    {"name_screen": "Profil", "to": "profil"}
+    {"name_screen": "Profil", "to": "profil"},
+    # {"name_screen": "SignIn", "to": "signIn"}
 ]
 
 
@@ -24,6 +25,10 @@ class ButtonNavigation(FloatLayout):
         self.size_hint_y = None  # agar tidka berpengaruk ke ukuran windows secra tinggi
 
         self.screen_manager = screen_manager
+
+        # di sini saya validari Aut karena di gunakan di banyak screen nantik
+        # if not session.get_data_session():
+        #     self.screen_manager.current = "signIn"
 
         with self.canvas:
             Color(0.12, 0.23, 0.37, 1)  # biru tua sebagai nav background

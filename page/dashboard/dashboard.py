@@ -5,11 +5,12 @@ from kivy.graphics import Color, RoundedRectangle
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.scrollview import ScrollView
 
 # COMPONENTS
 from components.navigation import ButtonNavigation
+from components.assetsManagement import get_resource_path
 from components.popup import CustomPopup
 from components.infoPopup import InfoPopup
 
@@ -20,7 +21,6 @@ from .menuCreate import Menu
 
 class DashboardScreen(Screen):
 
-   # server = Server()
     def __init__(self, screen_manager: None, **kwargs):
         self.screen_manager = screen_manager
         super().__init__(**kwargs)
@@ -31,7 +31,7 @@ class DashboardScreen(Screen):
 
         scroll.add_widget(centerItems())
 
-        mainLayot.add_widget(self.menu())
+        mainLayot.add_widget(self.menuHeader())
         mainLayot.add_widget(scroll)
 
         if screen_manager:
@@ -42,12 +42,12 @@ class DashboardScreen(Screen):
         # tambahkan semua layout utama di DashboardScreen
         self.add_widget(mainLayot)
 
-    def menu(self):
+    def menuHeader(self):
         divMenu = BoxLayout(orientation="horizontal", padding=20)
 
         judulMenu = Label(text="menu App", bold=True, color=(1, 0, 0, 1))
 
-# Tambah latar belakang ke divMenu
+        # Tabah latar belakang ke divMenu
         with divMenu.canvas.before:
             # Gunakan rentang 0-1, bukan 0-255
             Color(82/255, 178/255, 245/255, 1)
@@ -63,7 +63,7 @@ class DashboardScreen(Screen):
         divMenu.bind(pos=update_bg, size=update_bg)
 
         divMenu.add_widget(judulMenu)
-      #  divMenu.add_widget(create_check_ip_content())
+
         return divMenu
 
 
@@ -78,7 +78,7 @@ class centerItems(GridLayout):
         self.cols = 2
         self.spacing = 10  # jarak antar i:items
 
-        # ⬇️ DITAMBAHKAN: Otomatis ubah tinggi layout berdasarkan jumlah widget di dalamnya
+        # ⬇️ Otomatis ubah tinggi layout berdasarkan jumlah widget di dalamnya
         self.bind(minimum_height=self.setter('height'))
 
         width, height = Window.size

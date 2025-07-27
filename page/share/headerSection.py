@@ -1,6 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Ellipse, RoundedRectangle, Color
 
@@ -17,7 +16,6 @@ from kivy.clock import Clock
 from components.Globalstate import Store
 from components.assetsManagement import get_all_files, get_resource_path
 from typing import Callable, Tuple
-from components.infoPopup import InfoPopup
 
 
 class HeaderSection(BoxLayout):
@@ -110,10 +108,9 @@ class HeaderSection(BoxLayout):
         # pathIcon = os.path.join(os.path.dirname(__file__), "../assets/icon/")
         # icon_path = os.path.join(pathIcon, icon)
         icon_path = get_resource_path('assets', 'icon', icon)
-        btn = Button(size=(50, 50), size_hint=(
-            None, None), background_normal="")
-        icon = Image(source=icon_path)
-        btn.add_widget(icon)
+        img = Image(source=icon_path, allow_stretch=True, keep_ratio=True)
+        btn = Button(size=(50, 50), size_hint=(None, None))
+        btn.add_widget(img)
 
         # btn.bind(on_press=lambda x: event(x,arg))  # jika butuh arg
         btn.bind(on_press=event)  # panggil sata di tekan

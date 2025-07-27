@@ -19,7 +19,7 @@ class InfoPopup:
 
     '''
 
-    def __init__(self, title: str, type: str, timer: int):
+    def __init__(self, title: str, type: str, timer: float):
         self.title = title
         self.type = type
         self.popup = None  # tentukan popup di awal

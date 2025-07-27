@@ -6,9 +6,8 @@
   dan proses transfer dapat dimulai setelah client menambahkan alamat IP server.
 </p>
 
----
 
-## 🔧 Tech Stack
+### 🔧 Tech Stack
 
 <p align="center">
   <a href="https://skillicons.dev">
@@ -18,16 +17,28 @@
   <img src="https://img.shields.io/badge/Editor-Neovim-brightgreen?logo=neovim&logoColor=white" />
 </p>
 
----
 
-### **daftar page,fitur  untuk aplikasi *Berbagi File Lokal* | Python + kivy (tanpa internet, via  socket TCP):
+### Depedenci
+1. `Kivy`      : Library utama untuk GUI
+2. `Plyer`     : Untuk akses file fia Android/iOS
+3. `TinyDB`    : database local noSql  
+4. `kivyMd`    : untuk __icons__ dengan widget baru 
+                ![pictogrammers](https://pictogrammers.com/library/mdi/)
 
-```
+
+
+### daftar page,fitur  untuk aplikasi *Berbagi File Lokal* | Python + kivy (tanpa internet, via  socket TCP):
+
+<div align="center">
+<pre>
 ┌─────────────┐         WiFi LAN         ┌──────────────┐
 │   Client    │  ─────────────────────▶  │    Server    │
 │ (Pengirim)  │                          │  (Penerima)  │
 └─────────────┘                          └──────────────┘
-```
+</pre>
+
+</div>
+
 
 - server menunggu file masuk dan client akan mengirimkan file
 -  salah satu aplikasi harus berperan sebagai server, dan yang lain sebagai client.
@@ -44,14 +55,14 @@ __Serder__ atau Client
 * Tombol **Kirim**
 * Progress bar pengiriman
 * Notifikasi sukses/gagal
-__Receiver__ atau Server
+* Receiver__ atau Server
 * Tombol **Mulai Menerima**
 * Menampilkan alamat IP lokal (untuk diketik oleh pengirim)
 * Daftar file yang diterima
 * Opsi folder tujuan penyimpanan
 * Progress bar penerimaan
 
-3. Profil 
+3. **Profil** 
 * Ganti port komunikasi (default: 9090)
 * Folder default penyimpanan
 
@@ -65,14 +76,8 @@ __Receiver__ atau Server
 
 Aktifkan virtual env di linux
 ```bash
-source shareXPython/bin/activate
+source p-share/bin/activate
 ``` 
-
-### Dependencies
-Kivy: Library utama untuk GUI
-
-Plyer: Untuk akses file Android/iOS
-
 Konfigurasi Plyer (untuk Android)
 Tambahkan ke buildozer.spec:
 ```bash
@@ -80,12 +85,18 @@ requirements = python3,kivy,plyer
 android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 ```
 
----
 | Struktur Folder     | Deskripsi                                                          |
 | ------------------- | ------------------------------------------------------------------ |
 | `assets/file`       | Folder hasil upload pengguna (digunakan client & diatur di profil) |
 | `tets/`             | Folder uji coba                                                    |
 | `Network/`          | Backend & logika koneksi TCP                                       |
-| `Network/client.py` | Modul client socket                                                |
 | `receiver/`         | Folder penyimpanan file hasil transfer dari client                 |
+| `database`          | Folde menyimpan data (user login ,pathfile ,..)                    |
+| `user`              | folder menyimpan UI untuk user (login dan register)                |
 
+### Database sturcture | konsep
+database.json = menyimpan isi database user (name,password,pathfile)
+session.json = untuk menyimpan namauser yang sedang login saat ini untuk __cache__
+
+`Auth` :
+saat user memasukan nama otomatis sesion yang sebelumnya akan di drop dan di buat sesion baru yang akan di hapus ketika user logout , pada menu signUp data user yang di register akan di simpan di database

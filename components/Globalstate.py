@@ -8,7 +8,6 @@ import logging
 class GlobalState(EventDispatcher):
 
     isRealoadFile = BooleanProperty(False)
-
     # daftar isi pathFile yang di gunkan untuk mengirim file ke server nantik
     pathFileNames: list[str] = ListProperty([])
 
