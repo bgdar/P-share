@@ -19,11 +19,11 @@ from database.session import session
 
 
 class SignIn(Screen):
-    def __init__(self, screan_manager: ScreenManager, **kwargs):
+    def __init__(self, screen_manager, **kwargs):
         super().__init__(**kwargs)
 
         mainLayout = BoxLayout(orientation="vertical")
-        self.screanManager = screan_manager
+        self.screanManager = screen_manager
 
         # popupnya di tengah
         mainLayout.add_widget(self.popupSingIn())

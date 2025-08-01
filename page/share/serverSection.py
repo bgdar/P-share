@@ -4,6 +4,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.graphics import Color, Ellipse
 
+from kivymd.app import MDApp
 import os
 from threading import Thread
 from components.infoPopup import InfoPopup
@@ -20,6 +21,8 @@ class ServerSection(BoxLayout):
         self.padding = 10
 
         self.server_thread = None  # simpan thread
+
+        self.app = MDApp.get_running_app()
 
         # untuk sekarang port di atur static dulu
         self.server = Server(get_ip_address(), port=5000)
@@ -56,21 +59,23 @@ class ServerSection(BoxLayout):
         # Jika server thread sudah berjalan
         if self.server_thread and self.server_thread.is_alive():
             print("Server sudah jalan, hentikan.")
+            self.app.show_popup("server di hentikan", "info", 2)
             self.server.stop()  # pastikan server punya .stop() yang aman
             self.server_thread.join()  # tunggu thread selesai
             self.server_thread = None
         else:
             print("Server sedang dijalankan.")
+            self.app.show_popup("server berjalan", "info", 2)
             self.server_thread = Thread(target=self.server.start, daemon=True)
             self.server_thread.start()
 
             # validasi
         if len(self.server.clientError) != -1:
-            InfoPopup(self.server.clientError,
-                      type="warning", timer=1.5).Show_popup()
+            # InfoPopup(self.server.clientError,
+            # type="warning", timer=1.5).Show_popup()
             return self.server.clientError
         else:
-            InfoPopup("server aktive ", type='info', timer=1.5).Show_popup()
+            # InfoPopup("server aktive ", type='info', timer=1.5).Show_popup()
             print("server aktive")
 
     def update_graphics(self, instace, *args):

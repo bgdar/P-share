@@ -66,7 +66,40 @@ __Serder__ atau Client
 * Ganti port komunikasi (default: 9090)
 * Folder default penyimpanan
 
-## project Screenshot
+### daftar Warna 
+ Warna-warna ini dikonversi ke format **Kivy rgba** (range 0–1), sehingga langsung bisa digunakan pada properti seperti `.md_bg_color`, `.text_color`, dll :
+
+* `Hitam Abu Gelap (background utama)` = [27/255, 30/255, 35/255, 1]  #1B1E23
+* `Biru Neon` = [0.0, 0.639, 1.0, 1]  # #00A3FF
+* `Biru Laut` = [0.117, 0.564, 1.0, 1]  # #1E90FF
+* `Merah Terang` = [1.0, 0.231, 0.188, 1]  # #FF3B30
+* `Hijau Mint` = [0.596, 1.0, 0.596, 1]  # #98FB98
+* `Putih Bersih` = [1.0, 1.0, 1.0, 1]  # #FFFFFF
+* `Abu Lembut` = [0.75, 0.75, 0.75, 1]  # #BFBFBF
+* `Ungu Neon` = [0.6, 0.4, 1.0, 1]  # #9966FF
+* `Amber Hangat` = [1.0, 0.749, 0.0, 1]  # #FFBF00
+* `Kuning Lemon` = [1.0, 1.0, 0.4, 1]  # #FFFF66
+* `Cyan Soft` = [0.529, 0.808, 0.922, 1]  # #87CEEB
+__ warna untuk Hover , Press , focus__ 
+* `Hitam Abu Lebih Gelap (hover)` = [20/255, 22/255, 26/255, 1]  #14161A
+* `Biru Neon Gelap` = [0.0, 0.45, 0.71, 1]  # #0073B5
+* `Biru Laut Gelap` = [0.08, 0.4, 0.7, 1]  # #1466B2
+* `Merah Gelap` = [0.75, 0.15, 0.13, 1]  # #BF261F
+* `Hijau Mint Gelap` = [0.4, 0.8, 0.4, 1]  # #66CC66
+* `Putih Abu` = [0.9, 0.9, 0.9, 1]  # #E6E6E6
+* `Abu Gelap` = [0.5, 0.5, 0.5, 1]  # #808080
+* `Ungu Neon Gelap` = [0.45, 0.3, 0.75, 1]  # #724CBE
+* `Amber Gelap` = [0.8, 0.6, 0.0, 1]  # #CC9900
+* `Kuning Lemon Gelap` = [0.8, 0.8, 0.3, 1]  # #CCCC4D
+* `Cyan Soft Gelap` = [0.35, 0.6, 0.75, 1]  # #5999BF
+warna untuk popup info 
+* `Success`  = [0.2, 0.8, 0.4, 1]       # #33CC66 — hijau lembut tapi mencolok
+* `Error`    = [0.9, 0.2, 0.2, 1]       # #E63333 — merah terang kontras di latar gelap
+* `Warning`  = [1.0, 0.65, 0.0, 1]      # #FFA500 — oranye terang (seperti amber neon)
+* `Info`     = [0.0, 0.75, 1.0, 1]      # #00BFFF — biru terang segar untuk notifikasi/info
+
+
+### project Screenshot
 <p align="center">
   <img src="./assets/img/sampel.png" alt="sampel project" width="70%" />
 </p>

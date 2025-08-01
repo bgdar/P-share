@@ -6,7 +6,7 @@ from kivy.graphics import Ellipse, RoundedRectangle, Color
 from kivy.properties import StringProperty
 
 from kivy.uix.label import Label
-from kivy.uix.button import Button
+from kivymd.uix.button import MDRaisedButton
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
@@ -35,12 +35,12 @@ class HeaderSection(BoxLayout):
         self.add_widget(self.__headerContent())
 
         divItemsFiles = BoxLayout(orientation='horizontal', padding=10)
-        divItemsFiles.add_widget(self.__btn_icon(
-            icon="file.png", event=self._toggle_show_files))
+        # divItemsFiles.add_widget(self.__btn_icon(
+        #     icon="file.png", event=self._toggle_show_files))
 
+        divItemsFiles.add_widget(self.__filesContent())
         # bind untuk menampilkan data terbaru dari div container
         Store.bind(isRealoadFile=self._reaload_divGridContainer)
-        divItemsFiles.add_widget(self.__filesContent())
 
         self.add_widget(divItemsFiles)
 
@@ -75,7 +75,7 @@ class HeaderSection(BoxLayout):
         return divHeader
 
     def __filesContent(self) -> ScrollView:
-        '''divGridContainer yang menampung semua file file '''
+        ''' menampung semua file file  ynag akan di gunakan untuk di kirim user'''
         scroll = ScrollView(bar_color=[0.23, 0.4, 0.5, 0.5], do_scroll_y=True)
 
         self.divGridContainer = GridLayout(spacing=5, size_hint_y=None)
@@ -84,38 +84,31 @@ class HeaderSection(BoxLayout):
 
         # isi setiap file nya di sini
         # baca file yang ada di folder assert/file
-        for file in get_all_files():  # ini sialisasi awal dan berubah nantik ketika _toggle_show_files berubah
+        files = get_all_files()
+        for file in files:  # ini sialisasi awal dan berubah nantik ketika _toggle_show_files berubah
             self.divGridContainer.add_widget(
                 self.__btn_file(file['nameFile'], file['pathFile']))
-        print("current loop di fungsi ini allfile")
 
-        self.divGridContainer.opacity = 0
-        self.divGridContainer.disabled = True
-        scroll.add_widget(self.divGridContainer)
-
-        return scroll
-
-    def _toggle_show_files(self, instance):
-        '''toggle untuk divGridContainer'''
-        if self.divGridContainer.opacity == 0:
+        # Tampilkan container jika ada file, sembunyikan jika tidak ada
+        if files:
             self.divGridContainer.opacity = 1
             self.divGridContainer.disabled = False
         else:
             self.divGridContainer.opacity = 0
             self.divGridContainer.disabled = True
+        scroll.add_widget(self.divGridContainer)
 
-    def __btn_icon(self, icon: str, event: Callable):
-        # pathIcon = os.path.join(os.path.dirname(__file__), "../assets/icon/")
-        # icon_path = os.path.join(pathIcon, icon)
-        icon_path = get_resource_path('assets', 'icon', icon)
-        img = Image(source=icon_path, allow_stretch=True, keep_ratio=True)
-        btn = Button(size=(50, 50), size_hint=(None, None))
-        btn.add_widget(img)
-
-        # btn.bind(on_press=lambda x: event(x,arg))  # jika butuh arg
-        btn.bind(on_press=event)  # panggil sata di tekan
-
-        return btn
+        return scroll
+    #
+    # def _toggle_show_files(self, instance):
+    #     '''toggle untuk divGridContainer'''
+    #     if self.divGridContainer.opacity == 0:
+    #         self.divGridContainer.opacity = 1
+    #         self.divGridContainer.disabled = False
+    #     else:
+    #         self.divGridContainer.opacity = 0
+    #         self.divGridContainer.disabled = True
+    #
 
     def _reaload_divGridContainer(self, instance=None, value=None):
         self.divGridContainer.clear_widgets()  # hapus isinya
@@ -125,10 +118,13 @@ class HeaderSection(BoxLayout):
                 self.__btn_file(file['nameFile'], file['pathFile']))
         # setelah semua di realod atur kembali ke False
         Store.toogle_realoadFile(False)
+        # Tampilkan kembali container setelah reload
+        self.divGridContainer.opacity = 1
+        self.divGridContainer.disabled = False
 
     def __btn_file(self, filename: str, pathFile: str) -> BoxLayout:
 
-        btn = Button(text=filename)
+        btn = MDRaisedButton(text=filename)
         divbutton = BoxLayout(orientation="vertical",
                               size_hint_y=None, height=30)
         divStatusClick = Widget(size_hint=(None, None),

@@ -1,4 +1,6 @@
 # di sini component untuk meng handle pengiriman file
+from kivymd.app import MDApp
+
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -31,9 +33,14 @@ class ClientSection(BoxLayout):
         self.inputData = None
         self.mainLayout = None
 
+        self.app = MDApp.get_running_app()
+
         # tambahkan di awakl
         self.inputData = self.__InputData()
         self.add_widget(self.inputData)
+
+        self.mainFloatLayout = FloatLayout()
+        self.add_widget(self.mainFloatLayout)
 
         # windows yang bsai di gunakan untuk Update Layout
         self.update_layout(Window.size)
@@ -80,8 +87,9 @@ class ClientSection(BoxLayout):
                 ip = self.textIp.text.strip()
                 port = int(self.textPort.text.strip())
                 self.__setClient(ip, port)
-            except Exception:
-                InfoPopup('Format salah', 'warning', 2).Show_popup()
+            except ValueError:
+                self.app.show_popup("format salah", "warning", 2)
+
                 return
 
             self.btnShare = self.__btn_send_file("send.png")
@@ -125,15 +133,17 @@ class ClientSection(BoxLayout):
         # validasi file yang di simpan di store globa
         if len(Store.pathFileNames) == 1:
             self.client.send_file(Store.pathFileNames[0])
-        elif len(Store.pathFileNames):
+        elif len(Store.pathFileNames) > 1:
             for fileName in Store.pathFileNames:
                 # kirim setelah 1 detik , jeda 1 detik
                 Clock.schedule_once(
                     lambda dt: self.client.send_file(fileName), 1)
         else:
             print("file kosong di filename global")
-            InfoPopup("kosong , pilih dulu file nya", 'info', 1.5).Show_popup()
+            self.app.show_popup(
+                "kosong , pilih dulu file nya", 'info', 1.5)
             print("isi file global", Store.pathFileNames)
+            return  # Exit early if no files to send
         # jalankan server untuk mengahdnle conetion dari client
 
         # Toggle balik ke form input

@@ -2,11 +2,15 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, RoundedRectangle
-from kivy.uix.button import Button
+# from kivy.uix.button import Button
+from kivymd.uix.button import MDIconButton
+from kivymd.uix.label import MDLabel
+
 from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.scrollview import ScrollView
+
 
 # COMPONENTS
 from components.navigation import ButtonNavigation
@@ -21,7 +25,7 @@ from .menuCreate import Menu
 
 class DashboardScreen(Screen):
 
-    def __init__(self, screen_manager: None, **kwargs):
+    def __init__(self, screen_manager: ScreenManager, **kwargs):
         self.screen_manager = screen_manager
         super().__init__(**kwargs)
         # layout utama untuk screen dasboard
@@ -87,15 +91,16 @@ class centerItems(GridLayout):
         for items in Menu:
             # panggil setiap card items
             self.add_widget(self.cardItems(
-                items["menu"], items["popup"], items['popupInfo']))
+                items["menu"], items["icon"], items["popup"]))
 
         # manipulasi perubhan layout Windows nya
         self.update_layout(Window.size)
         Window.bind(size=self.on_window_resize)
 
-    def cardItems(self, menu: str, popup: CustomPopup, popupInfo: ''):
+    def cardItems(self, menu: str, icon: str, popup: CustomPopup) -> BoxLayout:
         '''setiap card items akan mmemiliki div sendiri'''
-        divItems = BoxLayout(size_hint_y=None, height=100, padding=10)
+        divItems = BoxLayout(orientation="vertical",
+                             size_hint_y=None, height=100, padding=10)
 
         with divItems.canvas.before:
             Color(0.9, 0.9, 0.9, 1)  # warna putih
@@ -112,17 +117,17 @@ class centerItems(GridLayout):
         # gunakan nantik
         # btn.bind(on_press=partial(self.navigate_to, to))#tambah parameter 'to'
         # divItems.add_widget(btn)
-        btn = Button(text=menu)
-        btn.bind(on_press=lambda x: self.__onClickBtnMenu(popup, popupInfo))
+        divItems.add_widget(MDLabel(text=menu))
+        btn = MDIconButton(icon=icon, text_color=[1, 1, 1, 1], md_bg_color=(
+            27/255, 30/255, 35/255, 1), theme_text_color="Custom", pos_hint={"center_x": 0.5, "center_y": 0.5})
+        btn.bind(on_press=lambda x: self.__onClickBtnMenu(popup))
         divItems.add_widget(btn)
 
         return divItems
 
-    def __onClickBtnMenu(self, popup: CustomPopup, popupInfo: InfoPopup):
+    def __onClickBtnMenu(self, popup: CustomPopup):
         ''' @popupInfo: cek di file menuCreate.py dari sini di kirimnya'''
         popup.show()
-        if popupInfo != "":
-            popupInfo.Show_popup()
 
     def on_window_resize(self, instance, size):
         ''''fungsi yang menerima perubahan untuk di gunakan '''

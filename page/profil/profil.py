@@ -1,6 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
-
+from kivymd.uix.scrollview import ScrollView
 from .menuItems import MenuItem
 from .ProfilHeader import ProfilHeader
 
@@ -13,10 +13,13 @@ class ProfilScreen(Screen):
         self.screen_manager = screen_manager
         super().__init__(**kwargs)
         mainLayout = BoxLayout(orientation="vertical")
-        # menu foto profil yg di atas
-        self.add_widget(ProfilHeader())
-        # menu item yg di tengah sampai bawah
-        mainLayout.add_widget(MenuItem())
+        # menu foto profil yg di atas , ini bisa di jadikan latar belakang
+        # self.add_widget(ProfilHeader())
+        mainLayout.add_widget(ProfilHeader())
+
+        itemsScrolll = ScrollView()
+        itemsScrolll.add_widget(MenuItem(self.screen_manager))
+        mainLayout.add_widget(itemsScrolll)
 
         # button navigasi di paling bawah
         if self.screen_manager:

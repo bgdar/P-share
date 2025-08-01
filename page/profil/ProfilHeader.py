@@ -1,13 +1,18 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
-from kivy.graphics import Color, Ellipse
-from kivy.uix.image import Image
+from kivy.graphics import Color, Ellipse, Rectangle
 
 
 class ProfilHeader(BoxLayout):
     def __init__(self):
         super().__init__()
         self.orientation = "vertical"
+        with self.canvas.before:
+            Color(27/255, 30/255, 35/255, 1)
+            bg = Rectangle(size=self.size, pos=self.pos)
+
+        self.bind(pos=lambda instace, value: self.update_pos(bg, value))
+        self.bind(size=lambda instace, value: self.update_size(bg, value))
 
         self.add_widget(self.fotoProfilCard())
 
@@ -18,11 +23,12 @@ class ProfilHeader(BoxLayout):
 
         with self.divFotoProfilCard.canvas.before:
             # profileImage = Image(source=image)
-            Color(0.8, 0.8, 0.8, 1)  # Warna abu-abu terang
+            Color(0.5, 0.5, 0.5, 1)
             self.ellipse = Ellipse(size=(50, 50))
 
-        self.divFotoProfilCard.bind(size=lambda instace, vlu: self.update_size(
-            self.ellipse, vlu), pos=lambda instace, vlu: self.update_pos(self.ellipse, vlu))
+        # saya ingin utnuk bacgorun ini absolute
+        # self.divFotoProfilCard.bind(size=lambda instace, vlu: self.update_size(
+            # self.ellipse, vlu), pos=lambda instace, vlu: self.update_pos(self.ellipse, vlu))
 
         self.divFotoProfilCard.bind(
             pos=self.update_bgCicler, size=self.update_bgCicler)
@@ -32,16 +38,16 @@ class ProfilHeader(BoxLayout):
         self.ellipse.pos = self.divFotoProfilCard.pos
         self.ellipse.size = self.divFotoProfilCard.size
 
-    def update_size(self, instace, size):
+    def update_size(self, rect, size):
         '''gunakan bind untuk mengupdate size
         param :
-            instace : perent
+            rect : kemana akan di update (mislanya Rectangle)
             size    : size dari yang mengikuti perentenya'''
-        instace.size = size
+        rect.size = size
 
-    def update_pos(self, instace, pos):
+    def update_pos(self, rect, pos):
         '''gunakan bind untuk mengupdate pos
         param :
-            instace : perent
+            rect : kemana akan di update (misalnay Rectangle)
             size    : pos dari yang mengikuti perentenya'''
-        instace.pos = pos
+        rect.pos = pos

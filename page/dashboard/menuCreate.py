@@ -2,10 +2,12 @@
 
 import os
 
+from kivymd.app import MDApp
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 
 from kivy.utils import platform
@@ -14,7 +16,7 @@ from kivy.graphics import Color, Rectangle
 from plyer import filechooser
 
 from components.popup import CustomPopup
-from components.infoPopup import InfoPopup
+# from components.infoPopup import InfoPopup
 from components.Globalstate import Store
 
 from network import get_ip_address, ping_server
@@ -34,11 +36,11 @@ def file_selected_PC(instance, selection, touch=None):
             try:
                 print("is run file selectetd")
                 shutil.copy(file, folder_file)
-                # natifikasi jika berhasil
-                notif = InfoPopup(f'file {file} di salin', 'succes', 3)
-                notif.Show_popup()
-
-                # update isReloud
+                # # natifikasi jika berhasil
+                # notif = InfoPopup(f'file {file} di salin', 'succes', 3)
+                # notif.Show_popup()
+                #
+                # # update isReloud
                 Store.toogle_realoadFile(True)
 
             except Exception as e:
@@ -70,8 +72,9 @@ def change_path(instance, file_pc_choose: FileChooserListView):
 
 def create_upload_file():
     content = BoxLayout(orientation="vertical")
-
-    print("platform", platform)
+    # app = MDApp.get_running_app()
+    #
+    # app.show_popup("click 2 kali untuk melihat", "success", 1.5)
     if platform in ['android', 'ios']:
         filechooser.open_file(on_selection=file_selected_Mobile)
         content.add_widget(Label(text="choose file upload"))
@@ -176,16 +179,13 @@ menu4Popup = CustomPopup(posisi_popup=(
 menu4Popup.set_content(create_menu4_content)
 
 
-# katagory popup
-infoUploadFile = InfoPopup(
-    title="Click 2 kali untuk save file", type='info', timer=3)
-
 # menu yang akan di gunakan di Dashboard
 Menu = [
     # gunakan untuk mendapakan ip yg bisa di gunakan
-    {"menu": "upload", "popup": menuUploadFile, "popupInfo": infoUploadFile},
-    {"menu": "cek ip ", "popup": cekIpPopup, "popupInfo": ""},
-    {"menu": "ping", "popup": menuChekIp, "popupInfo": ""},
-    {"menu": "menu4", "popup": menu4Popup, "popupInfo": ""},
+    {"menu": "upload", "icon": "upload-box",
+        "popup": menuUploadFile},
+    {"menu": "cek ip ", "icon": "ip", "popup": cekIpPopup},
+    {"menu": "ping", "icon": "network", "popup": menuChekIp},
+    {"menu": "menu4", "icon": "menu", "popup": menu4Popup},
 
 ]
