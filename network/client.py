@@ -13,6 +13,8 @@ class Client:
            port       = port server tujuan 
         '''
         self.shareSucess = None
+        # gunakan untuk informasi status pengiriman nantinya
+        self.info: str = ""
         self.__ip = ip_tujuan
         self.__port = port
 
@@ -36,6 +38,7 @@ class Client:
             ack = connection.recv(1024).decode()
             if ack != 'OK':  # kirim byte OK
                 print("[!] Gagal menerima ACK dari server.")
+                self.info = "server tidak menerima masukan"
                 return
 
             # Kirim isi file
@@ -45,8 +48,10 @@ class Client:
                     connection.send(chunk)
 
             print(f"[✓] File '{filename}' berhasil dikirim.")
+            self.info = f"File '{filename}' berhasil dikirim."
             self.shareSucess = True
         except Exception as e:
             print(f"[!] Gagal mengirim file: {e}")
+            self.info = f"[!] Gagal mengirim file: {e}"
         finally:
             connection.close()

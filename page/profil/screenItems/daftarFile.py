@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
+from kivymd.uix.button import MDIconButton
 
 
 class DaftarFile(Screen):
@@ -9,10 +10,16 @@ class DaftarFile(Screen):
         self.screen_manager = screen_manager
 
         mainLAyout = MDBoxLayout(orientation="vertical")
+
+        btnback = MDIconButton(icon="arrow-left-bold-box")
+        mainLAyout.add_widget(btnback)
+
+        btnback.bind(on_press=self._back)
+
         mainLAyout.add_widget(MDLabel(text="daftar file "))
 
         self.add_widget(mainLAyout)
 
-    def _back(self):
+    def _back(self, instace):
         """ kembali ke halaman signUp"""
         self.screen_manager.current = "signUp"

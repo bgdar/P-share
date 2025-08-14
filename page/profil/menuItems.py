@@ -6,7 +6,6 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDTextButton
 
 from kivy.graphics import Color, Rectangle
-
 from database.session import session
 
 # nantik gunakan ini ke tombol logout untuk menghapus chace dari session agar bisa di arahkan ke halaman login
@@ -32,23 +31,27 @@ class MenuItem(BoxLayout):
             self.add_widget(item_widget)
 
     def item(self, item: str) -> BoxLayout:
-        '''setiap item punya containernya sendiri'''
-        divItem = BoxLayout(orientation='horizontal', padding=5)
+        '''item menu dan setiap item punya containernya sendiri'''
+        divItem = BoxLayout(orientation='horizontal',
+                            # [left, top, right, bottom] atau 2 value
+                            padding=[10, 8],
+                            spacing=10,
+                            size_hint_y=None,  # Supaya height bisa diatur manual
+                            height=50)
+
         with divItem.canvas.before:
             Color(27/255, 30/255, 35/255, 1)
-            bgItem = Rectangle()
+            self.bgItem = Rectangle()
 
-        def update_bgItem(instance, *args):
-            bgItem.pos = instance.pos
-            bgItem.size = instance.size
+        divItem.bind(pos=self.update_bgItem, size=self.update_bgItem)
 
-        divItem.bind(pos=update_bgItem, size=update_bgItem)
-
-        btnTrigger = MDTextButton(text=item)
+        btnTrigger = MDTextButton(text=item, text_color=[0.9, 0.9, 0.9, 1])
         divItem.add_widget(btnTrigger)
 
         btnTrigger.bind(
-            on_release=lambda instace: self._handleBtnTrigger(instace, item))
+            on_release=lambda instance, i=item: self._handleBtnTrigger(
+                instance, i)
+        )
 
         return divItem
 
@@ -58,3 +61,8 @@ class MenuItem(BoxLayout):
             self.screen_manager.current = "settings"
         elif item == "daftar file":
             self.screen_manager.current = "daftar-file"
+
+    def update_bgItem(self, instance, *args):
+        """gunakan jika ada perubahan lebar atau posisi untuk megsejajarkan antara sub dengn pembungusnya"""
+        self.bgItem.pos = instance.pos
+        self.bgItem.size = instance.size

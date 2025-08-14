@@ -2,7 +2,6 @@
 
 import os
 
-from kivymd.app import MDApp
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.label import Label
 from kivy.uix.button import Button

@@ -5,9 +5,9 @@ from kivy.graphics import Ellipse, RoundedRectangle, Color
 
 from kivy.properties import StringProperty
 
-from kivy.uix.label import Label
+from kivymd.uix.label import MDLabel
+
 from kivymd.uix.button import MDRaisedButton
-from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.widget import Widget
 
@@ -15,7 +15,7 @@ from kivy.clock import Clock
 
 from components.Globalstate import Store
 from components.assetsManagement import get_all_files, get_resource_path
-from typing import Callable, Tuple
+from typing import Tuple
 
 
 class HeaderSection(BoxLayout):
@@ -27,16 +27,12 @@ class HeaderSection(BoxLayout):
         self.padding = 10
         self.orientation = "vertical"
         self.windowWidth, self.windowHeight = Window.size
-        # property
-        # self.pathFile: list(str) = []
-        # Inisialisasi value dari StringProperty
+
         self.lenSelectPathFile = str(len(Store.pathFileNames))
 
         self.add_widget(self.__headerContent())
 
         divItemsFiles = BoxLayout(orientation='horizontal', padding=10)
-        # divItemsFiles.add_widget(self.__btn_icon(
-        #     icon="file.png", event=self._toggle_show_files))
 
         divItemsFiles.add_widget(self.__filesContent())
         # bind untuk menampilkan data terbaru dari div container
@@ -59,11 +55,11 @@ class HeaderSection(BoxLayout):
         divHeader.bind(size=lambda instance, value: self.update_bg_size(divHeaderBg, value),
                        pos=lambda instance, value: self.update_bg_pos(divHeaderBg, value))
 
-        divHeader.add_widget(Label(text="Your choise"))
+        divHeader.add_widget(MDLabel(text="Your choise"))
         # ambil path file name , reload jika ada perubahan pada fileny
         # Buat label untuk jumlah file
         # Label yang akan berubah
-        labelPathFile = Label()
+        labelPathFile = MDLabel()
         labelPathFile.bind(size=labelPathFile.setter('text_size'))
         labelPathFile.text = self.lenSelectPathFile
         # Bind property ke Label.text

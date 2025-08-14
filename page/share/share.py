@@ -1,11 +1,12 @@
 from kivy.uix.screenmanager import Screen
 from components.navigation import ButtonNavigation
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.uix.slider import Slider
 from kivy.uix.carousel import Carousel
 import os
 from components.assetsManagement import get_resource_path
+
+from kivymd.uix.button import MDIconButton
 
 from .serverSection import ServerSection
 from .clientSection import ClientSection
@@ -36,7 +37,7 @@ class ShareScreen(Screen):
     def _ServerClientSlider(self):
         self.carousel = Carousel(direction='right', loop=True)
 
-        divSlider = BoxLayout(orientation="vertical")
+        divSlider = BoxLayout(orientation="vertical", padding=10)
 
         self.carousel.add_widget(ClientSection())
         self.carousel.add_widget(ServerSection())
@@ -44,8 +45,10 @@ class ShareScreen(Screen):
         # untuk menampung navnya
         btnNav = BoxLayout(size_hint_y=0.1)
 
-        btn_prev = Button(text="<", font_size=24)
-        btn_next = Button(text=">", font_size=24)
+        btn_next = MDIconButton(icon="arrow-left-bold-circle", font_size=26, pos_hint={
+                              "center_x": 0.5, "center_y": 0.5})
+        btn_prev = MDIconButton(icon="arrow-right-bold-circle", font_size=26, pos_hint={
+                              "center_x": 0.5, "center_y": 0.5})
 
         btnNav.add_widget(btn_prev)
         btnNav.add_widget(btn_next)
