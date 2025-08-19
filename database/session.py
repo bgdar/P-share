@@ -17,7 +17,6 @@ class Session:
         # Gunakan caching untuk performa
         self.sesion = TinyDB(
             pathSesiondb, storage=CachingMiddleware(JSONStorage))
-        self.nameUserNow: str = ""
 
     # def start(self, pathdb):
     #     # Cek apakah file kosong, jika iya isi file sbg dengan default TinyDB
@@ -42,22 +41,22 @@ class Session:
     #         with open(pathdb, 'w') as file:
     #             file.write('{"_default": {}}')
 
-    def update_session(self, nameUser: str, passwordUser: str):
+    def update_session(self, nameUser: str, emailuser: str):
         '''update sesion yang menyimpan __cache__ password dan name '''
         # base64.b32encode mengembalikan byte jadi kita decodekan kembali agar bisa di simpan
-        paswordEncode = base64.b32encode(passwordUser.encode()).decode()
         nameEncode = base64.b32encode(nameUser.encode()).decode()
-        self.nameUserNow = nameUser
+        emailEncode = base64.b32encode(emailuser.encode()).decode()
 
-        print("running sesion data", paswordEncode, nameEncode)
+        print("running sesion data", emailEncode, nameEncode)
         print("status sesion", self.sesion)
 
         self.sesion.insert({
             "name": nameEncode,
-            "password": paswordEncode,
+            "email": emailEncode,
+
         })
 
-    def get_data_session(self) -> bool:
+    def cek_data(self) -> bool:
         # '''Mengembalikan True jika ada session yang cocok'''
         # if not self.nameUserNow:
         #     return False
@@ -82,6 +81,11 @@ class Session:
 
             return False
 
+    def get_data(self):
+        """ kembalikan data user saat ini """
+        dataUser = self.sesion.all()
+        return dataUser[0] if dataUser else None
+
     def save(self):
         '''simpan dan tutup database'''
         self.sesion.close()
@@ -89,7 +93,6 @@ class Session:
     def drop_data_sesion(self):
         '''hapus semua data sesion jika tidak di perlukan'''
         self.sesion.truncate()
-        self.nameUserNow = ""
 
 
 session = Session()

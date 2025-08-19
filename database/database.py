@@ -10,6 +10,7 @@ from .session import session
 # {
 # name : name ,
 # password :password,
+# email : email,
 # create_at : 2025-12-1,
 # pathfile: {
 #     ....,...,..
@@ -36,7 +37,7 @@ class Db:
 
     def insert_login(self, data):
         '''@param data : masukan data bertipe dictionary seperti contoh di bawah
-           @example    : {name:"nama_nya",password:"password_nya"} '''
+           @example    : {name:"nama_nya",password:"password_nya,email:email_nya"} '''
         print("data yang di dapat :", data)
         # validasi jika user sudah ada atau belum
         # if self.__database.search(self.__query.name == data['name']):
@@ -46,6 +47,7 @@ class Db:
         self.__database.insert({
             'name': data['name'],
             "password": data['password'],
+            "email": data['email'],
             "create_at": str(datetime.date.today()),
         })
 
@@ -59,6 +61,10 @@ class Db:
             return True
         else:
             False
+
+    def get_data_by_name(self, name: str):
+        ''' kembalikan data yg cocok berdasarkan name'''
+        return self.__database.get(self.__query.name == name)
 
     def save(self):
         '''tutup database'''

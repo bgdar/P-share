@@ -29,29 +29,32 @@ class SignUp(Screen):
         textName = MDTextField(hint_text="masukan nama kamu ")
         textPassword = MDTextField(
             hint_text="masukan password kamu", password=True)
+        textEmail = MDTextField(hint_text="email")
+
         divPopupSignUp.add_widget(textName)
         divPopupSignUp.add_widget(textPassword)
+        divPopupSignUp.add_widget(textEmail)
 
         btnSubmit = MDRaisedButton(text="Submit", pos_hint={"center_x": 0.5})
         divPopupSignUp.add_widget(btnSubmit)
 
         btnSubmit.bind(on_release=lambda instace: self._handleButtonSubmit(
-            instace, textName=textName, textPassword=textPassword))
+            instace, textName=textName, textPassword=textPassword, textEmail=textEmail))
 
         return divPopupSignUp
 
-    def _handleButtonSubmit(self, instace, textName: MDTextField, textPassword: MDTextField):
+    def _handleButtonSubmit(self, instace, textName: MDTextField, textPassword: MDTextField, textEmail: MDTextField):
         if len(textName.text) <= 0:
-            InfoPopup("warning", "isi dulu nama kamu", 1.5).Show_popup()
+            InfoPopup("warning", "isi dulu nama kamu", 1.5).show_popup()
         elif len(textPassword.text) <= 0:
             InfoPopup("masukin dulu password nya ", "warning", 1.5)
         else:
             # create session dan database
 
             database.insert_login(
-                {"name": textName.text, "password": textPassword.text})
+                {"name": textName.text, "password": textPassword.text, "email": textEmail.text})
 
-            InfoPopup("success create your accont", "succes", 1.5).Show_popup()
+            InfoPopup("success create your accont", "succes", 1.5).show_popup()
             Clock.schedule_once(
                 lambda detime: self.__redirect_page("signIn"), 1.6)
 

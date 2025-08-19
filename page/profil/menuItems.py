@@ -1,68 +1,124 @@
+from kivymd.uix.card import MDCard
+
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.scrollview import ScrollView
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.uix.screenmanager import ScreenManager
+from kivy.core.window import Window
+from kivy.graphics import Color, RoundedRectangle
 
 from kivymd.uix.label import MDLabel
+from kivy.uix.scrollview import ScrollView
 from kivymd.uix.button import MDTextButton
+from kivymd.uix.list import OneLineIconListItem, MDList, IconLeftWidget
 
-from kivy.graphics import Color, Rectangle
+from kivy.graphics import Color, RoundedRectangle
 from database.session import session
 
 # nantik gunakan ini ke tombol logout untuk menghapus chace dari session agar bisa di arahkan ke halaman login
 # session.drop_data_sesio
 
 
-items: list[str] = ["setings", "daftar file", "logout"]
-
-
 class MenuItem(BoxLayout):
-    '''menu menu di bawah'''
+    """menu menu di bawah"""
+
+    # items: list[str] = ["settings", "daftar file", "logout"]
+    items = {
+        "settings": "cog",
+        "daftar file": "folder",  # folder cocok utk daftar file
+        "logout": "logout",
+    }
 
     def __init__(self, screen_manager: ScreenManager):
         super().__init__()
-        self.orientation = 'vertical'
+        self.orientation = "vertical"
         self.padding = 10
         self.spacing = 15
 
         self.screen_manager = screen_manager
 
-        for item in items:
-            item_widget = self.item(item=item)
-            self.add_widget(item_widget)
-
-    def item(self, item: str) -> BoxLayout:
-        '''item menu dan setiap item punya containernya sendiri'''
-        divItem = BoxLayout(orientation='horizontal',
-                            # [left, top, right, bottom] atau 2 value
-                            padding=[10, 8],
-                            spacing=10,
-                            size_hint_y=None,  # Supaya height bisa diatur manual
-                            height=50)
-
-        with divItem.canvas.before:
-            Color(27/255, 30/255, 35/255, 1)
-            self.bgItem = Rectangle()
-
-        divItem.bind(pos=self.update_bgItem, size=self.update_bgItem)
-
-        btnTrigger = MDTextButton(text=item, text_color=[0.9, 0.9, 0.9, 1])
-        divItem.add_widget(btnTrigger)
-
-        btnTrigger.bind(
-            on_release=lambda instance, i=item: self._handleBtnTrigger(
-                instance, i)
+        self.mainLayout: MDBoxLayout = MDBoxLayout(
+            orientation="horizontal", padding=10, spacing=10
         )
 
-        return divItem
+        with self.canvas.before:
+            Color(0.75, 0.75, 0.75, 1)
+            bgMain = RoundedRectangle(size=self.size, pos=self.pos)
+        self.bind(
+            pos=lambda instace, value: self._update_bg_pos(bgMain, value),
+            size=lambda instace, value: self._update_bg_size(bgMain, value),
+        )
+
+        # card yg horizintal
+        self.mainLayout.add_widget(self.sectionLeft())
+        self.mainLayout.add_widget(self.sectionRight())
+
+        # ketika windows berubah
+        Window.bind(on_resize=self.upgrade_windows)
+        # main layout utama
+        self.add_widget(self.mainLayout)
+
+    def sectionRight(self) -> ScrollView:
+        """section"""
+        scroll: ScrollView = ScrollView()
+        # warna scroll , langsong di canvas agar tidak ada terlalu banyak wrapper class baru
+        with scroll.canvas.before:
+            Color(0.0, 0.639, 1.0, 1)
+            bgSectionnRight = RoundedRectangle(size=scroll.size, pos=scroll.pos)
+        scroll.bind(
+            size=lambda instace, v: self._update_bg_size(bgSectionnRight, v),
+            pos=lambda instace, v: self._update_bg_pos(bgSectionnRight, v),
+        )
+
+        listview = MDList()
+        for text, icon_name in self.items.items():
+            item = OneLineIconListItem(
+                text=text,
+                # bg_color=[0.0, 0.639, 1.0, 1],
+                on_release=lambda x, i=text: self._handleBtnTrigger(x, i),
+            )
+            item.add_widget(
+                IconLeftWidget(
+                    icon=icon_name,
+                    theme_text_color="Custom",
+                    text_color=[0.9, 0.9, 0.9, 1],
+                )
+            )
+            listview.add_widget(item)
+
+        scroll.add_widget(listview)
+
+        return scroll
+
+    def sectionLeft(self) -> MDCard:
+        """bagian atau menu di sebelah kiri"""
+        layout = MDCard(
+            orientation="vertical", md_bg_color=[0.4, 0.8, 0.4, 1], padding=10
+        )
+        layout.add_widget(MDLabel(text="profile"))
+        return layout
 
     def _handleBtnTrigger(self, instace, item: str):
-        print("items dan ", item)
-        if item == "setings":
-            self.screen_manager.current = "settings"
-        elif item == "daftar file":
-            self.screen_manager.current = "daftar-file"
+        # screen_item = re.sub(r'[-_+=,\.]+', "", item)
+        screen_item = item.replace(" ", "-")
+        if item != "logout":  # jika bukan logout
+            self.screen_manager.current = screen_item
 
-    def update_bgItem(self, instance, *args):
-        """gunakan jika ada perubahan lebar atau posisi untuk megsejajarkan antara sub dengn pembungusnya"""
-        self.bgItem.pos = instance.pos
-        self.bgItem.size = instance.size
+    def _update_bg_pos(self, instance, pos):
+        """Update pos bacground"""
+        instance.pos = pos
+
+    def _update_bg_size(self, instance, size):
+        """update size untu bacground"""
+        instance.size = size
+
+    def upgrade_windows(self, windows, width, height):
+        """update jika ada perubahan windows"""
+        # Pilih breakpoint — sesuaikan kalau mau lebih sensitif
+        should_vertical = (width <= 700) or (width < height)
+
+        # jangan set ulang jika sama
+        new_orient = "vertical" if should_vertical else "horizontal"
+        if self.mainLayout.orientation == new_orient:
+            return
+        # ubah orientasi
+        self.mainLayout.orientation = new_orient

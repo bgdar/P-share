@@ -53,15 +53,15 @@ class mainApp(MDApp):
                 screen_class(name=name, screen_manager=self.screenManager))
 
         return self.root_layout
-    # Saat aplikais pertama kali di jalankan
 
+    # Saat aplikais pertama kali di jalankan
     def on_start(self):
         print("apliakasi Running")
         database.start(database.databasePath)
 
         # AUTH cache sesion
         # di sini saya validari Aut karena di gunakan di banyak screen nantik
-        if session.get_data_session():
+        if session.cek_data():
             self.screenManager.current = "dashboard"
         else:
             self.screenManager.current = "signIn"

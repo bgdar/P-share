@@ -2,48 +2,73 @@
 from kivymd.app import MDApp
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.label import MDLabel
-from kivymd.uix.button import MDRaisedButton, MDRoundFlatButton
+from kivymd.uix.card import MDCard
+from kivymd.uix.button import MDRaisedButton, MDRoundFlatButton, MDRectangleFlatButton
+from kivymd.uix.boxlayout import MDBoxLayout
 
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
+
+from kivy.properties import StringProperty
+
 # from kivy.uix.textinput import TextInput
-from kivymd.uix.boxlayout import MDBoxLayout
 from network import Client
 from kivy.clock import Clock
 from kivy.uix.image import Image
 
-
+from kivy.graphics import Color, Ellipse, RoundedRectangle
 from kivy.core.window import Window
+from kivy.uix.widget import Widget
 
 from components.Globalstate import Store
-from components.assetsManagement import get_resource_path
-from components.infoPopup import InfoPopup
+from components.assetsManagement import get_all_files
 
-from kivy.graphics import Color, Ellipse
+
+from typing import Tuple
 
 
 class ClientSection(BoxLayout):
+    # observable property  : ynag bisa di bind ke UI
+    lenSelectPathFile = StringProperty()
 
     def __init__(self):
         super().__init__()
         self.orientation = "vertical"
+        self.spacing = 10
+        # self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
 
         # Variabel utama
         self.inputData = None
         self.btnSend = None
         self.client: Client = None
+
+        # simpan ip
         self.ip = ""
         self.port = 0
 
-        self.app = MDApp.get_running_app()
+        # Initialize divGridContainer early to avoid AttributeError
+        self.divGridContainer = None
 
+        self.app = MDApp.get_running_app()
         # Layout utama
-        self.mainFloatLayout = FloatLayout()
-        self.add_widget(self.mainFloatLayout)
+        self.mainlayout = MDBoxLayout(orientation="horizontal")
+        # manipulasi windows
+        self.update_window(windowSize=Window.size)
+        Window.bind(size=self.on_window_resize)
+
+        self._update_selected_files_count()  # update counter awal
 
         # Tambah tombol utama di awal
         self.btnSend = self.create_btn_send()
-        self.add_widget(self.btnSend)
+
+        # WIDGET UTAMAN DI ClientSection
+        self.mainlayout.add_widget(self.sectionFile())
+        self.mainlayout.add_widget(self.btnSend)
+        # WIDGET UTAMAN DI ClientSection
+        self.add_widget(self.mainlayout)
+        self.add_widget(self.footer())
 
     def __set_client(self, ip_tujuan: str, port: int = 5000):
         """Set koneksi client."""
@@ -52,54 +77,62 @@ class ClientSection(BoxLayout):
 
     def create_btn_send(self) -> MDRaisedButton:
         """Tombol utama kirim file."""
-        btn = MDRaisedButton(text="file-send", size_hint=(0.3, 0.1))
+        btn = MDRectangleFlatButton(
+            icon="send", pos_hint={"center_x": 0.5, "center_y": 0.5}
+        )
         btn.bind(on_press=self._confirm_send)
         return btn
 
     def __input_data(self) -> BoxLayout:
         """Form input IP & Port (tampil bila data belum diisi)."""
-        self.divTextInput = MDBoxLayout(
+        divTextInput = MDBoxLayout(
             orientation="vertical",
             padding=10,
             spacing=10,
-            size_hint_x=None
+            size_hint_x=None,
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
+        # gambar bacground
+        with divTextInput.canvas.before:
+            Color(0.75, 0.75, 0.75, 1)
+            self.bgInputText = RoundedRectangle(
+                size=divTextInput.size, pos=divTextInput.pos
+            )
 
-        self.textIp = MDTextField(
-            hint_text="Masukan IP server", max_text_length=16
-        )
-        self.textPort = MDTextField(
-            text="5000", max_text_length=6
-        )
+        divTextInput.bind(pos=self.update_bg, size=self.update_bg)
+
+        self.textIp = MDTextField(hint_text="Masukan IP server", max_text_length=16)
+        self.textPort = MDTextField(text="5000", max_text_length=6)
 
         btnConfirm = MDRaisedButton(text="Confirm")
-        btnConfirm.bind(on_press=self._confirms)
+        btnConfirm.bind(on_press=self._confirm_data)
 
-        self.divTextInput.add_widget(
-            MDLabel(text="Masukkan IP dan Port tujuan:"))
-        self.divTextInput.add_widget(self.textIp)
-        self.divTextInput.add_widget(self.textPort)
-        self.divTextInput.add_widget(btnConfirm)
+        divTextInput.add_widget(MDLabel(text="Masukkan IP dan Port tujuan:"))
+        divTextInput.add_widget(self.textIp)
+        divTextInput.add_widget(self.textPort)
+        divTextInput.add_widget(btnConfirm)
 
         self.update_layout(Window.size)
         Window.bind(size=self.on_window_resize)
-        return self.divTextInput
+        return divTextInput
 
     def _confirm_send(self, instance):
         """Cek apakah sudah ada IP & Port, jika belum tampilkan form input."""
         if not self.ip or self.port == 0:
             # Tampilkan form input
-            if self.btnSend in self.children:
-                self.remove_widget(self.btnSend)
+            if self.btnSend in self.mainlayout.children:
+                self.mainlayout.remove_widget(self.btnSend)
             self.inputData = self.__input_data()
-            self.add_widget(self.inputData)
+            self.mainlayout.add_widget(self.inputData)
+        elif self.client.info:
+            self.app.show_popup(self.client.info, "info", 2)
         else:
             # Jika IP & Port sudah diisi, langsung kirim file
             self._handle_action(instance)
             # informasi dari server
-            self.app.show_popup(self.client.info, "info", 2)
+            self.app.show_popup("file sending", "info", 2)
 
-    def _confirms(self, instance):
+    def _confirm_data(self, instance):
         """Konfirmasi input IP & Port dari form."""
         try:
             self.ip = self.textIp.text.strip()
@@ -111,8 +144,8 @@ class ClientSection(BoxLayout):
             self.__set_client(ip_tujuan=self.ip, port=self.port)
 
             # Ganti form input dengan tombol kirim file
-            if self.inputData in self.children:
-                self.remove_widget(self.inputData)
+            if self.inputData in self.mainlayout.children:
+                self.mainlayout.remove_widget(self.inputData)
             self.btnSend = self.create_btn_send()
             self.add_widget(self.btnSend)
 
@@ -133,8 +166,130 @@ class ClientSection(BoxLayout):
             self.client.send_file(Store.pathFileNames[0])
         else:
             for fileName in Store.pathFileNames:
-                Clock.schedule_once(
-                    lambda dt: self.client.send_file(fileName), 1)
+                Clock.schedule_once(lambda dt: self.client.send_file(fileName), 1)
+
+    # BAGIAN KIRI UNTUK PEMILIHAN FILE NYA ⚠️
+    def sectionFile(self) -> MDCard:
+        layout = MDCard(
+            orientation="vertical",
+            md_bg_color=[0.75, 0.75, 0.75, 1],
+            padding=10,
+            size_hint=(0.5, 1),
+        )
+        # bind untuk menampilkan data terbaru dari div container
+        Store.bind(isRealoadFile=self._reaload_divGridContainer)
+        scroll = ScrollView(bar_color=[0.23, 0.4, 0.5, 0.5], do_scroll_y=True)
+
+        self.divGridContainer = GridLayout(size_hint_y=None, cols=1, spacing=(0, 10))
+
+        self.divGridContainer.bind(
+            minimum_height=self.divGridContainer.setter("height")
+        )
+        # isi setiap file nya di sini
+        # baca file yang ada di folder assert/file
+        files = get_all_files()
+        for (
+            file
+        ) in (
+            files
+        ):  # ini sialisasi awal dan berubah nantik ketika _toggle_show_files berubah
+            self.divGridContainer.add_widget(
+                self.__btn_file(file["nameFile"], file["pathFile"])
+            )
+
+        # Tampilkan container jika ada file, sembunyikan jika tidak ada
+        if files:
+            self.divGridContainer.opacity = 1
+            self.divGridContainer.disabled = False
+        else:
+            self.divGridContainer.opacity = 0
+            self.divGridContainer.disabled = True
+        scroll.add_widget(self.divGridContainer)
+
+        layout.add_widget(scroll)
+        # Buat label untuk jumlah file
+        # Label yang akan berubah
+        labelPathFile = MDLabel()
+        labelPathFile.bind(size=labelPathFile.setter("text_size"))
+        labelPathFile.text = self.lenSelectPathFile
+        # lenSelectPathFile property di-bind dengan benar ke label menggunakan lambda function:
+        self.bind(
+            lenSelectPathFile=lambda instance, value: setattr(
+                labelPathFile, "text", f"Selected: {value} file"
+            )
+        )
+        layout.add_widget(labelPathFile)
+
+        return layout
+
+    def _reaload_divGridContainer(self, instance=None, value=None):
+        """Di gunakan jika ada perubahan di store"""
+        self.divGridContainer.clear_widgets()  # hapus isinya
+        # tambhakan ulang
+        for file in get_all_files():
+            self.divGridContainer.add_widget(
+                self.__btn_file(file["nameFile"], file["pathFile"])
+            )
+        # setelah semua di realod atur kembali ke False
+        Store.toogle_realoadFile(False)
+        # Tampilkan kembali container setelah reload
+        self.divGridContainer.opacity = 1
+        self.divGridContainer.disabled = False
+        # Update counter setelah reload
+        self._update_selected_files_count()
+
+    def __btn_file(self, filename: str, pathFile: str) -> BoxLayout:
+
+        btn = MDRaisedButton(text=filename)
+        divbutton = BoxLayout(orientation="vertical", size_hint_y=None, height=30)
+        divStatusClick = Widget(size_hint=(None, None), size=(25, 25))
+        with divStatusClick.canvas.before:
+            Color(1, 0, 0, 1)
+            ellips = Ellipse(pos=divStatusClick.pos, size=(15, 15))
+            # tetapkan atribut val ke ellips
+        divStatusClick.bind(pos=lambda instance, val: setattr(ellips, "pos", val))
+        # letakkan di bawah bind agar btn tidak tertimpa
+        divbutton.add_widget(btn)
+        # kondisi jika divInfoClick muncul tambahkan dan jika tidak hapus kembali
+        btn.bind(
+            on_press=lambda x: self.__trigrer_btn_file(
+                x, pathFile, divbutton, divStatusClick
+            )
+        )
+
+        return divbutton
+
+    def __trigrer_btn_file(
+        self, instance, pathFile: str, divbutton: BoxLayout, divStatusClick: Widget
+    ):
+        """fungsi yang terjadi saat setiap file di tekan"""
+        print("path yang di dapat :", pathFile)
+        if divStatusClick not in divbutton.children:
+            divbutton.add_widget(divStatusClick)
+            Store.setPathFileName(pathFile)
+            # perbaharui
+            self._update_selected_files_count()
+        else:
+            divbutton.remove_widget(divStatusClick)
+            Store.removePathFileName(pathFile)
+            # perbaharui
+            self._update_selected_files_count()
+
+    def _update_selected_files_count(self):
+        """Update count selected files dan trigger property change"""
+        self.lenSelectPathFile = str(len(Store.pathFileNames))
+
+    # BAGIAN KIRI UNTUK PEMILIHAN FILE NYA ⚠️
+    def footer(self) -> MDCard:
+        layout = MDCard(
+            orientation="horizontal",
+            md_bg_color=[0.75, 0.75, 0.75, 1],
+            size_hint_y=None,
+            height="50dp",
+            radius=[10],
+        )
+        layout.add_widget(MDLabel(text="footer"))
+        return layout
 
     def on_window_resize(self, instance, size):
         self.update_layout(size)
@@ -142,5 +297,20 @@ class ClientSection(BoxLayout):
     def update_layout(self, size):
         """Update ukuran layout input."""
         width, height = size
-        if hasattr(self, 'divTextInput'):
+        if hasattr(self, "divTextInput"):
             self.divTextInput.width = width * 0.45
+
+    def update_bg(self, instance, *arg):
+        "gunakan untuk update bg (size , pos)"
+        self.bgInputText.pos = instance.pos
+        self.bgInputText.size = instance.size
+
+    def on_window_resize(self, instance, windowSize):
+        self.update_window(windowSize)
+
+    def update_window(self, windowSize: Tuple[int, int]):
+        """isi setiap perubahan windwos nya"""
+        width, height = windowSize
+        # update untuk grid
+        if self.divGridContainer is not None:
+            self.divGridContainer.cols = 2 if width >= 700 or height >= 850 else 1

@@ -16,10 +16,10 @@ class DaftarFile(Screen):
 
         btnback.bind(on_press=self._back)
 
-        mainLAyout.add_widget(MDLabel(text="daftar file "))
+        mainLAyout.add_widget(MDLabel(text="daftar file commmin soon "))
 
         self.add_widget(mainLAyout)
 
     def _back(self, instace):
-        """ kembali ke halaman signUp"""
-        self.screen_manager.current = "signUp"
+        """ kembali ke halaman profil"""
+        self.screen_manager.current = "profil"

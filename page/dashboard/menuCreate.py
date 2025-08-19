@@ -15,6 +15,7 @@ from kivy.graphics import Color, Rectangle
 from plyer import filechooser
 
 from components.popup import CustomPopup
+
 # from components.infoPopup import InfoPopup
 from components.Globalstate import Store
 
@@ -66,6 +67,7 @@ def change_path(instance, file_pc_choose: FileChooserListView):
         # untuk sekarang gini aja dulu nantik akan di buat popup_Global
         print("path tidak valid")
 
+
 # CREATE MENU
 
 
@@ -74,24 +76,24 @@ def create_upload_file():
     # app = MDApp.get_running_app()
     #
     # app.show_popup("click 2 kali untuk melihat", "success", 1.5)
-    if platform in ['android', 'ios']:
+    if platform in ["android", "ios"]:
         filechooser.open_file(on_selection=file_selected_Mobile)
         content.add_widget(Label(text="choose file upload"))
     else:
         # managemnets file upload | semua file boleh di upload
-        file_pc_choose = FileChooserListView(
-            filters=["*.*"], multiselect=False)
+        file_pc_choose = FileChooserListView(filters=["*.*"], multiselect=False)
 
         # pembungkus file path start
-        divFilePath = BoxLayout(orientation="horizontal",
-                                size_hint_y=None, height=50)
+        divFilePath = BoxLayout(orientation="horizontal", size_hint_y=None, height=50)
         btnEnterPath = Button(text="add", width=40, size_hint_x=None)
 
         textFilePath = TextInput(hint_text="path")
-        textFilePath.bind(on_text_validate=lambda instance: change_path(
-            instance, file_pc_choose))
-        btnEnterPath.bind(on_press=lambda instance: change_path(
-            textFilePath, file_pc_choose))
+        textFilePath.bind(
+            on_text_validate=lambda instance: change_path(instance, file_pc_choose)
+        )
+        btnEnterPath.bind(
+            on_press=lambda instance: change_path(textFilePath, file_pc_choose)
+        )
 
         file_pc_choose.bind(on_selection=file_selected_PC)  # double efentc
         file_pc_choose.bind(on_submit=file_selected_PC)
@@ -106,9 +108,11 @@ def create_upload_file():
 
 
 def create_check_ip_content():
-    content = BoxLayout(orientation='horizontal')
+    content = BoxLayout(orientation="horizontal")
     content.add_widget(Label(text=get_ip_address()))
     return content
+
+
 # IP CHEK
 
 
@@ -116,10 +120,10 @@ def on_btn_check(instance, ping_server: callable, textIp: TextInput, result: Lab
     text_ip = textIp.text  # ambil text dari TextInput
     is_active = ping_server(text_ip)
     # Ubah teks label
-    result.text = 'Aktif' if is_active else 'Tidak Aktif'
+    result.text = "Aktif" if is_active else "Tidak Aktif"
     result.canvas.before.clear()
 
-    # Tambahkan warna latar belakang
+    # Tambahkan warna latar belakang untuk apakah aktive atua tidak
     with result.canvas.before:
         if is_active:
             Color(0, 1, 0, 0.3)  # Hijau dengan transparansi
@@ -137,14 +141,15 @@ def on_btn_check(instance, ping_server: callable, textIp: TextInput, result: Lab
                 else:
                     Color(1, 0, 0, 0.3)  # merah
                 Rectangle(pos=result.pos, size=result.size)
+
         result.bind(pos=update_rect, size=update_rect)
 
 
 def create_ip_check():
-    content = BoxLayout(orientation='vertical')
+    content = BoxLayout(orientation="vertical")
     textIp = TextInput(hint_text="ip server", multiline=False)
-    btnIp = Button(text='check')
-    result = Label(text='')
+    btnIp = Button(text="check")
+    result = Label(text="")
 
     btnIp.bind(on_press=lambda x: on_btn_check(x, ping_server, textIp, result))
 
@@ -155,36 +160,34 @@ def create_ip_check():
 
 
 def create_menu4_content():
-    content = BoxLayout(orientation='horizontal')
+    content = BoxLayout(orientation="horizontal")
     content.add_widget(Label(text="Menu 4 content"))
     return content
 
 
 # Buat popup terpisah untuk setiap menu
-menuUploadFile = CustomPopup(posisi_popup=(
-    100, 100), title="Upload file", size_popup=(450, 500))
+menuUploadFile = CustomPopup(
+    posisi_popup=(100, 100), title="Upload file", size_popup=(450, 500)
+)
 menuUploadFile.set_content(create_upload_file)
 
-cekIpPopup = CustomPopup(posisi_popup=(
-    100, 100), title="Your IP", size_popup=(200, 300))
+cekIpPopup = CustomPopup(
+    posisi_popup=(100, 100), title="Your IP", size_popup=(200, 300)
+)
 cekIpPopup.set_content(create_check_ip_content)
 
-menuChekIp = CustomPopup(posisi_popup=(
-    100, 100), title="Menu 3", size_popup=(200, 300))
+menuChekIp = CustomPopup(posisi_popup=(100, 100), title="Menu 3", size_popup=(200, 300))
 menuChekIp.set_content(create_ip_check)
 
-menu4Popup = CustomPopup(posisi_popup=(
-    100, 100), title="Menu 4", size_popup=(200, 300))
+menu4Popup = CustomPopup(posisi_popup=(100, 100), title="Menu 4", size_popup=(200, 300))
 menu4Popup.set_content(create_menu4_content)
 
 
 # menu yang akan di gunakan di Dashboard
 Menu = [
     # gunakan untuk mendapakan ip yg bisa di gunakan
-    {"menu": "upload", "icon": "upload-box",
-        "popup": menuUploadFile},
+    {"menu": "upload", "icon": "upload-box", "popup": menuUploadFile},
     {"menu": "cek ip ", "icon": "ip", "popup": cekIpPopup},
     {"menu": "ping", "icon": "network", "popup": menuChekIp},
     {"menu": "menu4", "icon": "menu", "popup": menu4Popup},
-
 ]

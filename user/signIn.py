@@ -69,15 +69,17 @@ class SignIn(Screen):
 
     def _handleButtonSubmit(self, instace, textName: TextInput, textPassword: TextInput):
         if len(textName.text) <= 0:
-            InfoPopup("warning", "isi dulu nama kamu", 1.5).Show_popup()
+            InfoPopup("warning", "isi dulu nama kamu", 1.5).show_popup()
         elif not database.cek_user_password(textPassword.text, textName.text):
             InfoPopup("password dan nama tidak di temukan ",
-                      "warning", 1.5).Show_popup()
+                      "warning", 1.5).show_popup()
         elif database.cek_user_password(password=textPassword.text, name=textName.text):
             # hapus data sesion yang lama untuk di masukan baru
             session.drop_data_sesion()
+            dataUser = database.get_data_by_name(textName.text)
+            # yang di simpan adalah "name" dan "email aja "
             session.update_session(
-                nameUser=textName.text, passwordUser=textPassword.text)
+                nameUser=dataUser["name"], emailuser=dataUser["email"])
 
             # redirect ke dashboard
             # sesuaikan nama dengan di mainApp.pydashboard
