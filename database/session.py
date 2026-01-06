@@ -53,7 +53,6 @@ class Session:
         self.sesion.insert({
             "name": nameEncode,
             "email": emailEncode,
-
         })
 
     def cek_data(self) -> bool:
@@ -71,7 +70,6 @@ class Session:
         data = self.sesion.all()
 
         for item in data:
-
             # karena yg di kemablikan object maka ambil yang key "name"
             name = item.get("name")
             if name and name.strip():

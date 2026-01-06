@@ -81,7 +81,7 @@ def create_upload_file():
         content.add_widget(Label(text="choose file upload"))
     else:
         # managemnets file upload | semua file boleh di upload
-        file_pc_choose = FileChooserListView(filters=["*.*"], multiselect=False)
+        file_pc_choose = FileChooserListView(filters=["*.*"], multiselect=True)
 
         # pembungkus file path start
         divFilePath = BoxLayout(orientation="horizontal", size_hint_y=None, height=50)
@@ -114,8 +114,6 @@ def create_check_ip_content():
 
 
 # IP CHEK
-
-
 def on_btn_check(instance, ping_server: callable, textIp: TextInput, result: Label):
     text_ip = textIp.text  # ambil text dari TextInput
     is_active = ping_server(text_ip)

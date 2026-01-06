@@ -43,6 +43,7 @@ class ClientSection(BoxLayout):
         self.inputData = None
         self.btnSend = None
         self.client: Client = None
+        self.layoutData: MDCard = None  # ini card yang di sectionData
 
         # simpan ip
         self.ip = ""
@@ -61,29 +62,21 @@ class ClientSection(BoxLayout):
         self._update_selected_files_count()  # update counter awal
 
         # Tambah tombol utama di awal
-        self.btnSend = self.create_btn_send()
+        # self.btnSend = self.create_btn_send()
 
         # WIDGET UTAMAN DI ClientSection
         self.mainlayout.add_widget(self.sectionFile())
-        self.mainlayout.add_widget(self.btnSend)
-        # WIDGET UTAMAN DI ClientSection
+        self.mainlayout.add_widget(self.sectionData())
+
         self.add_widget(self.mainlayout)
-        self.add_widget(self.footer())
+        self.add_widget(self.sectionFooter())
 
     def __set_client(self, ip_tujuan: str, port: int = 5000):
         """Set koneksi client."""
         if ip_tujuan and port > 0:
             self.client = Client(ip_tujuan=ip_tujuan, port=port)
 
-    def create_btn_send(self) -> MDRaisedButton:
-        """Tombol utama kirim file."""
-        btn = MDRectangleFlatButton(
-            icon="send", pos_hint={"center_x": 0.5, "center_y": 0.5}
-        )
-        btn.bind(on_press=self._confirm_send)
-        return btn
-
-    def __input_data(self) -> BoxLayout:
+    def __InputData(self) -> BoxLayout:
         """Form input IP & Port (tampil bila data belum diisi)."""
         divTextInput = MDBoxLayout(
             orientation="vertical",
@@ -116,14 +109,26 @@ class ClientSection(BoxLayout):
         Window.bind(size=self.on_window_resize)
         return divTextInput
 
+    def create_btn_send(self) -> MDRaisedButton:
+        """buat Tombol utama kirim file."""
+        btn = MDRectangleFlatButton(
+            icon="send", pos_hint={"center_x": 0.5, "center_y": 0.5}
+        )
+        btn.bind(on_press=self._confirm_send)
+        return btn
+
     def _confirm_send(self, instance):
         """Cek apakah sudah ada IP & Port, jika belum tampilkan form input."""
+
+        """ ada yang salah pada pengecekan btnSend di dalam layoutData yang type MDCard"""
+
         if not self.ip or self.port == 0:
             # Tampilkan form input
-            if self.btnSend in self.mainlayout.children:
-                self.mainlayout.remove_widget(self.btnSend)
-            self.inputData = self.__input_data()
-            self.mainlayout.add_widget(self.inputData)
+            if self.btnSend in self.layoutData.children:
+                print("tombol ada di layoutData")
+                self.layoutData.remove_widget(self.btnSend)
+            self.inputData = self.__InputData()
+            self.layoutData.add_widget(self.inputData)
         elif self.client.info:
             self.app.show_popup(self.client.info, "info", 2)
         else:
@@ -134,20 +139,25 @@ class ClientSection(BoxLayout):
 
     def _confirm_data(self, instance):
         """Konfirmasi input IP & Port dari form."""
+        """ ada yang salah pada pengecekan btnSend di dalam layoutData yang type MDCard
+"""
         try:
             self.ip = self.textIp.text.strip()
             self.port = int(self.textPort.text.strip())
 
             if not self.ip or self.port <= 0:
+                self.app.show_popup(
+                    "IP atau Port tidak valid", "warning", 2
+                )  # tampilkna popup
                 raise ValueError("IP atau Port tidak valid.")
 
             self.__set_client(ip_tujuan=self.ip, port=self.port)
 
-            # Ganti form input dengan tombol kirim file
-            if self.inputData in self.mainlayout.children:
-                self.mainlayout.remove_widget(self.inputData)
+            # Ganti form input dengan tombol kirim file kembali
+            if self.inputData in self.layoutData.children:
+                self.layoutData.remove_widget(self.inputData)
             self.btnSend = self.create_btn_send()
-            self.add_widget(self.btnSend)
+            self.layoutData.add_widget(self.btnSend)
 
         except ValueError:
             self.app.show_popup("Format IP/Port salah", "warning", 2)
@@ -172,7 +182,7 @@ class ClientSection(BoxLayout):
     def sectionFile(self) -> MDCard:
         layout = MDCard(
             orientation="vertical",
-            md_bg_color=[0.75, 0.75, 0.75, 1],
+            md_bg_color=[0.9, 0.9, 0.9, 1],
             padding=10,
             size_hint=(0.5, 1),
         )
@@ -279,8 +289,23 @@ class ClientSection(BoxLayout):
         """Update count selected files dan trigger property change"""
         self.lenSelectPathFile = str(len(Store.pathFileNames))
 
+    def sectionData(self) -> MDCard:
+        """ini section yang di sebelah kanan , untuk tombol dan"""
+        self.layoutData = MDCard(
+            orientation="vertical",
+            md_bg_color=[0.9, 0.9, 0.9, 1],
+            padding=10,
+            size_hint=(0.5, 1),
+        )
+        # ada yang salah pada pengecekan btnSend di dalam layoutData yang type MDCard
+        # daftar kan duluan untuk tombol btnSend
+        self.btnSend = self.create_btn_send()
+        self.layoutData.add_widget(self.btnSend)
+
+        return self.layoutData
+
     # BAGIAN KIRI UNTUK PEMILIHAN FILE NYA ⚠️
-    def footer(self) -> MDCard:
+    def sectionFooter(self) -> MDCard:
         layout = MDCard(
             orientation="horizontal",
             md_bg_color=[0.75, 0.75, 0.75, 1],
@@ -314,3 +339,8 @@ class ClientSection(BoxLayout):
         # update untuk grid
         if self.divGridContainer is not None:
             self.divGridContainer.cols = 2 if width >= 700 or height >= 850 else 1
+
+        # ubah ukuran secton File dan Section Buttom
+        self.mainlayout.orientation = (
+            "horizontal" if width >= 700 or height >= 850 else "vertical"
+        )

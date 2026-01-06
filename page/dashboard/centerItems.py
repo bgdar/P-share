@@ -37,14 +37,14 @@ class centerItems(GridLayout):
         for items in Menu:
             # panggil setiap card items
             self.add_widget(
-                self.cardItems(items["menu"], items["icon"], items["popup"])
+                self.widgetCardItems(items["menu"], items["icon"], items["popup"])
             )
 
         # manipulasi perubhan layout Windows nya
         self.update_layout(Window.size)
         Window.bind(size=self.on_window_resize)
 
-    def cardItems(self, menu: str, icon: str, popup: CustomPopup) -> BoxLayout:
+    def widgetCardItems(self, menu: str, icon: str, popup: CustomPopup) -> BoxLayout:
         """setiap card items akan mmemiliki div sendiri"""
         self.divItems = BoxLayout(
             orientation="vertical", size_hint_y=None, height=100, padding=10
@@ -60,12 +60,12 @@ class centerItems(GridLayout):
             theme_text_color="Custom",
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
-        btn.bind(on_press=lambda x: self.__onClickBtnMenu(popup))
+        btn.bind(on_press=lambda x: self._on_press_btn_menu(popup))
         self.divItems.add_widget(btn)
 
         return self.divItems
 
-    def __onClickBtnMenu(self, popup: CustomPopup):
+    def _on_press_btn_menu(self, popup: CustomPopup):
         """@popupInfo: cek di file menuCreate.py dari sini di kirimnya"""
         popup.show()
 

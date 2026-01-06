@@ -15,6 +15,7 @@ class Client:
         self.shareSucess = None
         # gunakan untuk informasi status pengiriman nantinya
         self.info: str = ""
+        self.namaos : os = None
         self.__ip = ip_tujuan
         self.__port = port
 
@@ -55,3 +56,4 @@ class Client:
             self.info = f"[!] Gagal mengirim file: {e}"
         finally:
             connection.close()
+

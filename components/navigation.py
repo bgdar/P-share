@@ -33,7 +33,7 @@ class ButtonNavigation(FloatLayout):
         with self.canvas:
             Color(0.12, 0.23, 0.37, 1)  # biru tua sebagai nav background
             bg = RoundedRectangle(
-                radius=[10], pos=self.pos, size=self.size)
+             pos=self.pos, size=self.size)
 
             def update_bg(instance, value):
                 bg.pos = instance.pos

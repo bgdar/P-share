@@ -7,6 +7,7 @@ from kivy.core.window import Window
 from kivy.graphics import Color, RoundedRectangle
 
 from kivymd.uix.label import MDLabel
+from kivymd.uix.button import MDIconButton
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.button import MDTextButton
 from kivymd.uix.list import OneLineIconListItem, MDList, IconLeftWidget
@@ -14,11 +15,13 @@ from kivymd.uix.list import OneLineIconListItem, MDList, IconLeftWidget
 from kivy.graphics import Color, RoundedRectangle
 from database.session import session
 
+from components.popup import CustomPopup
+
 # nantik gunakan ini ke tombol logout untuk menghapus chace dari session agar bisa di arahkan ke halaman login
 # session.drop_data_sesio
 
 
-class MenuItem(BoxLayout):
+class widgetMenuItem(BoxLayout):
     """menu menu di bawah"""
 
     # items: list[str] = ["settings", "daftar file", "logout"]
@@ -49,15 +52,15 @@ class MenuItem(BoxLayout):
         )
 
         # card yg horizintal
-        self.mainLayout.add_widget(self.sectionLeft())
-        self.mainLayout.add_widget(self.sectionRight())
+        self.mainLayout.add_widget(self.widgetSectionRight())
+        self.mainLayout.add_widget(self.widgetsectionRight())
 
         # ketika windows berubah
         Window.bind(on_resize=self.upgrade_windows)
         # main layout utama
         self.add_widget(self.mainLayout)
 
-    def sectionRight(self) -> ScrollView:
+    def widgetSectionRight(self) -> ScrollView:
         """section"""
         scroll: ScrollView = ScrollView()
         # warna scroll , langsong di canvas agar tidak ada terlalu banyak wrapper class baru
@@ -74,7 +77,7 @@ class MenuItem(BoxLayout):
             item = OneLineIconListItem(
                 text=text,
                 # bg_color=[0.0, 0.639, 1.0, 1],
-                on_release=lambda x, i=text: self._handleBtnTrigger(x, i),
+                on_release=lambda x, i=text: self._on_release_btn_trigger(x, i),
             )
             item.add_widget(
                 IconLeftWidget(
@@ -89,7 +92,7 @@ class MenuItem(BoxLayout):
 
         return scroll
 
-    def sectionLeft(self) -> MDCard:
+    def widgetSectionLeft(self) -> MDCard:
         """bagian atau menu di sebelah kiri"""
         layout = MDCard(
             orientation="vertical", md_bg_color=[0.4, 0.8, 0.4, 1], padding=10
@@ -97,11 +100,34 @@ class MenuItem(BoxLayout):
         layout.add_widget(MDLabel(text="profile"))
         return layout
 
-    def _handleBtnTrigger(self, instace, item: str):
+    def _on_release_btn_trigger(self, instace, item: str):
         # screen_item = re.sub(r'[-_+=,\.]+', "", item)
         screen_item = item.replace(" ", "-")
         if item != "logout":  # jika bukan logout
             self.screen_manager.current = screen_item
+            return
+        else:
+            popupLogout = CustomPopup(
+                posisi_popup=(100, 100), title="Logout", size_popup=(200, 300)
+            )
+            popupLogout.set_content(self.widgetLogout())
+            popupLogout.show()
+
+    def widgetLogout(self) -> MDCard:
+        card = MDCard(
+            padding=10,
+            spacing=10,
+            md_bg_color=[0.75, 0.15, 0.13, 1],
+        )
+        btnlogout = MDIconButton(
+            icon="trash",
+            padding=8,
+            on_release=lambda instance, x: session.drop_data_sesion(),
+        )
+
+        card.add_widget(MDLabel(text="Are you sure to logout"))
+        card.add_widget(btnlogout)
+        return card
 
     def _update_bg_pos(self, instance, pos):
         """Update pos bacground"""

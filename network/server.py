@@ -107,5 +107,3 @@ def get_ip_address():
         return ip
     except Exception:
         return "127.0.0.1"
-
-# def received_folder(): #fungsi untuk mengecek apakah folder ada jika tidak ada buatkan ,gunakna di class nantik

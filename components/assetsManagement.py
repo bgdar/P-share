@@ -19,7 +19,7 @@ def get_resource_path(*relative_path_parts):
         str: Path absolut ke file resource tersebut.
     """
 
-    # Lokasi file Python yang MEMANGGIL fungsi ini (bukan lokasi fungsi ini berada)
+    # Lokasi file Python yang MEMANGGIL fungsi ini
     caller_file = inspect.stack()[1].filename
     caller_dir = os.path.dirname(os.path.abspath(caller_file))
 
@@ -31,7 +31,8 @@ def get_resource_path(*relative_path_parts):
         parent = os.path.dirname(current)
         if parent == current:
             raise FileNotFoundError(
-                "Folder 'assets' tidak ditemukan dalam struktur direktori atas.")
+                "Folder 'assets' tidak ditemukan dalam struktur direktori atas."
+            )
         current = parent
 
     # Setelah ditemukan root project, gabungkan dengan relative path
@@ -41,13 +42,13 @@ def get_resource_path(*relative_path_parts):
 class typeFile(TypedDict):
     pathFile: str
     nameFile: str
+
+
 # sedikit berantakan nanntik perbaiki lagi
-
-
 def get_all_files() -> List[typeFile]:
-    '''kembalikan dictionary nama file dan path filenya
-        @return : [{'pathFile':"...","nameFile":...},...]
-    '''
+    """kembalikan dictionary nama file dan path filenya
+    @return : [{'pathFile':"...","nameFile":...},...]
+    """
     pathfile = os.path.join(os.path.dirname(__file__), "../assets/file/")
     folder = Path(pathfile)
     if not folder.exists():
@@ -60,8 +61,8 @@ def get_all_files() -> List[typeFile]:
             print("path", file, "name", file.name)
             result.append(
                 {
-                    'pathFile': str(file),
-                    'nameFile': file.name,
+                    "pathFile": str(file),
+                    "nameFile": file.name,
                 }
             )
     return result

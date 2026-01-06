@@ -27,16 +27,15 @@ class ShareScreen(Screen):
         mainLayout.add_widget(HeaderSection())
         # menu pada bagian tengah yang menagani file di kirim
         # gunakan teknik slide nantik untuk memilih sebegai pegirim atau penerima
-        mainLayout.add_widget(self._ServerClientSlider())
+        mainLayout.add_widget(self.widgetSlider())
 
         if screen_manager:
-            mainLayout.add_widget(ButtonNavigation(
-                screen_manager=self.screen_manager))
+            mainLayout.add_widget(ButtonNavigation(screen_manager=self.screen_manager))
 
         self.add_widget(mainLayout)
 
-    def _ServerClientSlider(self) -> BoxLayout:
-        self.carousel = Carousel(direction='right', loop=True)
+    def widgetSlider(self) -> BoxLayout:
+        self.carousel = Carousel(direction="right", loop=True)
 
         divSlider = BoxLayout(orientation="vertical")
 
@@ -44,17 +43,19 @@ class ShareScreen(Screen):
         self.carousel.add_widget(ServerSection())
 
         # untuk menampung navnya
-        btnNav = BoxLayout(size_hint_y=0.1, pos_hint={
-                           "center_x": 0.5, "center_y": 0.5})
+        btnNav = BoxLayout(size_hint_y=0.1, pos_hint={"center_x": 0.5, "center_y": 0.5})
 
-        btn_next = MDIconButton(icon="arrow-left-bold-circle", font_size=26,)
+        btn_next = MDIconButton(
+            icon="arrow-left-bold-circle",
+            font_size=26,
+        )
         btn_prev = MDIconButton(icon="arrow-right-bold-circle", font_size=26)
 
         btnNav.add_widget(btn_prev)
         btnNav.add_widget(btn_next)
 
-        btn_prev.bind(on_press=self.prev_slide)
-        btn_next.bind(on_press=self.next_slide)
+        btn_prev.bind(on_press=self._on_press_prev_slide)
+        btn_next.bind(on_press=self._on_press_next_slide)
 
         # gabungkan hingga menjadi slide show
         divSlider.add_widget(self.carousel)
@@ -62,8 +63,8 @@ class ShareScreen(Screen):
 
         return divSlider
 
-    def next_slide(self, instance):
-        self.carousel.load_next(mode='next')
+    def _on_press_next_slide(self, instance):
+        self.carousel.load_next(mode="next")
 
-    def prev_slide(self, instance):
+    def _on_press_prev_slide(self, instance):
         self.carousel.load_previous()

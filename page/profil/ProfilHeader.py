@@ -3,22 +3,22 @@ from kivy.uix.label import Label
 from kivy.graphics import Color, Ellipse, RoundedRectangle
 
 
-class ProfilHeader(BoxLayout):
+class widgetProfilHeader(BoxLayout):
     def __init__(self):
         super().__init__()
         self.orientation = "vertical"
         with self.canvas.before:
-            Color(27/255, 30/255, 35/255, 1)
+            Color(27 / 255, 30 / 255, 35 / 255, 1)
             bg = RoundedRectangle(size=self.size, pos=self.pos)
 
         self.bind(pos=lambda instace, value: self.update_pos(bg, value))
         self.bind(size=lambda instace, value: self.update_size(bg, value))
 
-        self.add_widget(self.fotoProfilCard())
+        self.add_widget(self.widgetFotoProfil())
 
-    def fotoProfilCard(self):
-        ''' ini lingkaranya yg menampung foto profil'''
-        self.divFotoProfilCard = BoxLayout(orientation='horizontal')
+    def widgetFotoProfil(self) -> BoxLayout:
+        """ini lingkaranya yg menampung foto profil"""
+        self.divFotoProfilCard = BoxLayout(orientation="horizontal")
         self.divFotoProfilCard.add_widget(Label(text="header profile"))
 
         with self.divFotoProfilCard.canvas.before:
@@ -27,7 +27,8 @@ class ProfilHeader(BoxLayout):
             self.ellipse = Ellipse(size=(50, 50))
 
             self.divFotoProfilCard.bind(
-                pos=self.update_bgCicler, size=self.update_bgCicler)
+                pos=self.update_bgCicler, size=self.update_bgCicler
+            )
         return self.divFotoProfilCard
 
     def update_bgCicler(self, *args):
@@ -36,15 +37,15 @@ class ProfilHeader(BoxLayout):
 
     # walau ada cara yang lebih baik tapi !
     def update_size(self, rect, size):
-        '''gunakan bind untuk mengupdate size
+        """gunakan bind untuk mengupdate size
         param :
             rect : kemana akan di update (mislanya Rectangle)
-            size    : size dari yang mengikuti perentenya'''
+            size    : size dari yang mengikuti perentenya"""
         rect.size = size
 
     def update_pos(self, rect, pos):
-        '''gunakan bind untuk mengupdate pos
+        """gunakan bind untuk mengupdate pos
         param :
             rect : kemana akan di update (misalnay Rectangle)
-            size    : pos dari yang mengikuti perentenya'''
+            size    : pos dari yang mengikuti perentenya"""
         rect.pos = pos

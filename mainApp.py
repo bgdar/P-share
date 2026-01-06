@@ -56,7 +56,6 @@ class mainApp(MDApp):
 
     # Saat aplikais pertama kali di jalankan
     def on_start(self):
-        print("apliakasi Running")
         database.start(database.databasePath)
 
         # AUTH cache sesion

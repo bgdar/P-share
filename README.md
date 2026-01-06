@@ -26,7 +26,9 @@
 5. `suprabase` : untuk menyimpan data secara cloud
    pswd (databse) : P-share*-0w*
 
-### daftar page,fitur untuk aplikasi _Berbagi File Lokal_ | Python + kivy (tanpa internet, via socket TCP):
+### page,
+
+> fitur untuk aplikasi _Berbagi File Lokal_ | Python + kivy (tanpa internet, via socket TCP)
 
 <div align="center">
 <pre>
@@ -67,6 +69,36 @@
 - Ganti port komunikasi (default: 9090)
 - Folder default penyimpanan
 
+4. **Login**
+   handle login data di simpan di folder database
+
+- sesion di simpan secara sementara di file sesion.json dan di kelola oleh sesion.py , sesuai di `Auth`
+
+| Struktur Folder | Deskripsi                                                          |
+| --------------- | ------------------------------------------------------------------ |
+| `assets/file`   | Folder hasil upload pengguna (digunakan client & diatur di profil) |
+| `tets/`         | Folder uji coba                                                    |
+| `Network/`      | Backend & logika koneksi TCP                                       |
+| `receiver/`     | Folder penyimpanan file hasil transfer dari client                 |
+| `database`      | Folde menyimpan data (user login ,pathfile ,..)                    |
+| `user`          | folder menyimpan UI untuk user (login dan register)                |
+
+### Quote
+
+- nama function yang mengembalikan Widget seperti , Boxlayout , Mdcard , ..
+  penaman function nya di awali **widget<nama_function>**
+- nama function yang menghandle buton di awalin dengan **_<nama_event>_<nama_btn>**
+
+### Database sturctur | konsep
+
+database.json = menyimpan isi database user (name,password,pathfile)
+session.json = untuk menyimpan namauser yang sedang login saat ini untuk **cache**
+
+`Auth` :
+saat user memasukan nama otomatis sesion yang sebelumnya akan di drop dan di buat sesion baru yang akan di hapus ketika user logout , pada menu signUp data user yang di register akan di simpan di database
+
+- sesion : selanjutnya saya tambah data waktu , yang di mana kalau sudah sampai batasnya , maka gunakan untk menghapus sesion
+
 ### daftar Warna
 
 Warna-warna ini dikonversi ke format **Kivy rgba** (range 0–1), sehingga langsung bisa digunakan pada properti seperti `.md_bg_color`, `.text_color`, dll :
@@ -102,12 +134,6 @@ Warna-warna ini dikonversi ke format **Kivy rgba** (range 0–1), sehingga langs
 
 ### konfigurasi
 
-Aktifkan virtual env di linux
-
-```bash
-source p-share/bin/activate
-```
-
 Konfigurasi Plyer (untuk Android)
 Tambahkan ke buildozer.spec:
 
@@ -115,20 +141,3 @@ Tambahkan ke buildozer.spec:
 requirements = python3,kivy,plyer
 android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
 ```
-
-| Struktur Folder | Deskripsi                                                          |
-| --------------- | ------------------------------------------------------------------ |
-| `assets/file`   | Folder hasil upload pengguna (digunakan client & diatur di profil) |
-| `tets/`         | Folder uji coba                                                    |
-| `Network/`      | Backend & logika koneksi TCP                                       |
-| `receiver/`     | Folder penyimpanan file hasil transfer dari client                 |
-| `database`      | Folde menyimpan data (user login ,pathfile ,..)                    |
-| `user`          | folder menyimpan UI untuk user (login dan register)                |
-
-### Database sturcture | konsep
-
-database.json = menyimpan isi database user (name,password,pathfile)
-session.json = untuk menyimpan namauser yang sedang login saat ini untuk **cache**
-
-`Auth` :
-saat user memasukan nama otomatis sesion yang sebelumnya akan di drop dan di buat sesion baru yang akan di hapus ketika user logout , pada menu signUp data user yang di register akan di simpan di database

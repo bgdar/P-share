@@ -32,7 +32,7 @@ class DashboardScreen(Screen):
 
         scroll.add_widget(centerItems())
 
-        mainLayot.add_widget(self.menuHeader())
+        mainLayot.add_widget(self.widgetMenuHeader())
         mainLayot.add_widget(scroll)
 
         if screen_manager:
@@ -42,15 +42,15 @@ class DashboardScreen(Screen):
         # tambahkan semua layout utama di DashboardScreen
         self.add_widget(mainLayot)
 
-    def menuHeader(self):
+    def widgetMenuHeader(self) -> BoxLayout:
         divMenu = BoxLayout(orientation="horizontal", padding=20)
 
-        divMenu.add_widget(self._infoFile())
+        divMenu.add_widget(self.widgetInfoFile())
         judulMenu = Label(text="menu App", bold=True, color=(1, 0, 0, 1))
         # progrres bar di sebelah kanan
         with divMenu.canvas.before:
             Color(27 / 255, 30 / 255, 35 / 255, 1)
-            self.bg = RoundedRectangle(radius=[10], pos=divMenu.pos, size=divMenu.size)
+            self.bg = RoundedRectangle(pos=divMenu.pos, size=divMenu.size)
 
         # agar jika ada perubahan maka akan di ikuti posisinya
         divMenu.bind(pos=self.update_bg, size=self.update_bg)
@@ -59,7 +59,7 @@ class DashboardScreen(Screen):
 
         return divMenu
 
-    def _infoFile(self) -> BoxLayout:
+    def widgetInfoFile(self) -> BoxLayout:
         """mengembalikan text info file saat ini"""
         layout = BoxLayout(
             orientation="vertical", pos_hint={"center_x": 0.5, "center_y": 0.5}

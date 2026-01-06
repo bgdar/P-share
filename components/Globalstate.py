@@ -4,8 +4,8 @@ import logging
 
 # 1. gunakan saat upload file saat ada perubhan maka update fungsi files di serde.py untuk mengupdate file file nya
 
-
 class GlobalState(EventDispatcher):
+    '''global class yang mengelola state di aplikasi ini '''
 
     isRealoadFile = BooleanProperty(False)
     # daftar isi pathFile yang di gunkan untuk mengirim file ke server nantik
